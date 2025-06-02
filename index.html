@@ -136,20 +136,22 @@
 <body class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Lord of Files Analytics</h1>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                Lord of Files Analytics
+                <a href="#disclaimer" class="text-xs text-gray-500 ml-2 hover:text-gray-700 underline">(data disclaimer)</a>
+            </h1>
             <p class="text-gray-600">Visualize and analyze score distributions across different departments</p>
         </div>
 
         <div class="mb-6 flex flex-wrap gap-4 items-center">
             <div>
-                <label for="datasetSelect" class="block text-sm font-medium text-gray-700 mb-2">Select Department
-                    Manager:</label>
+                <label for="datasetSelect" class="block text-sm font-medium text-gray-700 mb-2">Select Manager:</label>
                 <select id="datasetSelect" class="select">
-                    <option value="all">All Managers Combined</option>
-                    <option value="dood-bully">Dood Bully</option>
+                    <option value="all">All</option>
+                    <option value="dood-bully">Bully The Kid</option>
                     <option value="doxmuddler">Dox Muddler</option>
                     <option value="negativenancy">Negative Nancy</option>
-                    <option value="trollalot">Troll A Lot</option>
+                    <option value="trollalot">Sir TrollzALot</option>
                 </select>
             </div>
 
@@ -225,6 +227,18 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Disclaimer -->
+        <div id="disclaimer" class="mt-16 p-6 bg-gray-100 border-t border-gray-200">
+            <div class="text-center">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Data Disclaimer</h3>
+                <p class="text-sm text-gray-600">
+                    All data presented in this dashboard is as of June 1st, 2025 at 11:30 PM PDT.
+                    <br>
+                    This information represents a snapshot in time and may not reflect current standings.
+                </p>
             </div>
         </div>
     </div>
