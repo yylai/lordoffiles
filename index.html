@@ -194,6 +194,10 @@
                 <div class="stat-label">Total Users</div>
             </div>
             <div class="stat-card">
+                <div class="stat-value" id="totalScore">-</div>
+                <div class="stat-label">Total Score</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-value" id="maxScore">-</div>
                 <div class="stat-label">Max Score</div>
             </div>
@@ -218,7 +222,8 @@
                     <span id="histogramIcon" class="mr-3"></span>
                     <span id="chartTitle">Score Distribution (Power Law Analysis)</span>
                 </h2>
-                <p id="chartDescription" class="card-description">Users ranked by score (highest to lowest) to visualize power law distribution</p>
+                <p id="chartDescription" class="card-description">Users ranked by score (highest to lowest) to visualize
+                    power law distribution</p>
             </div>
             <div class="card-content">
                 <div style="position: relative; height: 400px;">
@@ -260,6 +265,8 @@
                     All data presented in this dashboard is as of June 1st, 2025 at 11:30 PM PDT.
                     <br>
                     This information represents a snapshot in time and may not reflect current standings.
+                    <br><br>
+                    This program calculates statistics and visualizations to the best of its ability but makes no guarantees on the accuracy of the results.
                 </p>
             </div>
         </div>
@@ -2478,11 +2485,11 @@
         function createPowerLawData(data) {
             // Sort users by score in descending order
             const sortedData = [...data].sort((a, b) => b.score - a.score);
-            
+
             // Create labels and scores arrays
             const labels = sortedData.map((_, index) => `Rank ${index + 1}`);
             const scores = sortedData.map(user => user.score);
-            
+
             return { labels, scores, sortedData };
         }
 
@@ -2518,7 +2525,8 @@
         function updateStats(data) {
             const scores = data.map(item => item.score);
             const totalUsers = data.length;
-            const avgScore = scores.reduce((a, b) => a + b, 0) / totalUsers;
+            const totalScore = scores.reduce((a, b) => a + b, 0);
+            const avgScore = totalScore / totalUsers;
             const maxScore = Math.max(...scores);
             const zeroScores = scores.filter(score => score === 0).length;
 
@@ -2529,6 +2537,7 @@
                 : sortedScores[Math.floor(sortedScores.length / 2)];
 
             document.getElementById('totalUsers').textContent = totalUsers.toLocaleString();
+            document.getElementById('totalScore').textContent = totalScore.toLocaleString();
             document.getElementById('avgScore').textContent = avgScore.toFixed(1);
             document.getElementById('maxScore').textContent = maxScore.toLocaleString();
             document.getElementById('medianScore').textContent = medianScore.toLocaleString();
@@ -2569,7 +2578,7 @@
             const selectedDataset = document.getElementById('datasetSelect').value;
             const chartType = document.getElementById('chartType').value;
             const binSize = parseInt(document.getElementById('binSize').value || 25);
-            
+
             // Show/hide bin size selector based on chart type
             const binSizeContainer = document.getElementById('binSizeContainer');
             binSizeContainer.style.display = chartType === 'histogram' ? 'block' : 'none';
@@ -2591,7 +2600,7 @@
             // Update chart title and description
             const chartTitle = document.getElementById('chartTitle');
             const chartDescription = document.getElementById('chartDescription');
-            
+
             if (chartType === 'powerlaw') {
                 chartTitle.textContent = 'Score Distribution (Rank Distribution)';
                 chartDescription.textContent = 'Users ranked by score (highest to lowest) to visualize score concentration';
@@ -2624,7 +2633,7 @@
             if (chartType === 'powerlaw') {
                 // Create power law data
                 const powerLawData = createPowerLawData(data);
-                
+
                 currentChart = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -2661,12 +2670,12 @@
                             },
                             tooltip: {
                                 callbacks: {
-                                    title: function(context) {
+                                    title: function (context) {
                                         const index = context[0].dataIndex;
                                         const user = powerLawData.sortedData[index];
                                         return `Rank #${index + 1}: ${user.name}`;
                                     },
-                                    label: function(context) {
+                                    label: function (context) {
                                         return `Score: ${context.parsed.y.toLocaleString()}`;
                                     }
                                 }
@@ -2695,7 +2704,7 @@
             } else {
                 // Create histogram data
                 const histogramData = createHistogramData(data, binSize);
-                
+
                 currentChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
