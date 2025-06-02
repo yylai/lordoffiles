@@ -179,6 +179,10 @@
                 <div class="stat-label">Max Score</div>
             </div>
             <div class="stat-card">
+                <div class="stat-value" id="medianScore">-</div>
+                <div class="stat-label">Median Score</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-value" id="avgScore">-</div>
                 <div class="stat-label">Average Score</div>
             </div>
@@ -2464,9 +2468,16 @@
             const maxScore = Math.max(...scores);
             const zeroScores = scores.filter(score => score === 0).length;
 
+            // Calculate median
+            const sortedScores = [...scores].sort((a, b) => a - b);
+            const medianScore = sortedScores.length % 2 === 0
+                ? (sortedScores[sortedScores.length / 2 - 1] + sortedScores[sortedScores.length / 2]) / 2
+                : sortedScores[Math.floor(sortedScores.length / 2)];
+
             document.getElementById('totalUsers').textContent = totalUsers.toLocaleString();
             document.getElementById('avgScore').textContent = avgScore.toFixed(1);
             document.getElementById('maxScore').textContent = maxScore.toLocaleString();
+            document.getElementById('medianScore').textContent = medianScore.toLocaleString();
             document.getElementById('zeroScores').textContent = zeroScores.toLocaleString();
         }
 
