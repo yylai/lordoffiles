@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
+
         * {
             font-family: 'Inter', sans-serif;
         }
-        
+
         /* Custom CSS inspired by shadcn/ui */
         .card {
             background: white;
@@ -20,28 +21,28 @@
             border: 1px solid #e5e7eb;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
-        
+
         .card-header {
             padding: 1.5rem 1.5rem 0 1.5rem;
         }
-        
+
         .card-content {
             padding: 1.5rem;
         }
-        
+
         .card-title {
             font-size: 1.5rem;
             font-weight: 600;
             line-height: 1.25;
             color: #111827;
         }
-        
+
         .card-description {
             font-size: 0.875rem;
             color: #6b7280;
             margin-top: 0.25rem;
         }
-        
+
         .button {
             display: inline-flex;
             align-items: center;
@@ -54,26 +55,26 @@
             border: none;
             padding: 0.5rem 1rem;
         }
-        
+
         .button-primary {
             background-color: #3b82f6;
             color: white;
         }
-        
+
         .button-primary:hover {
             background-color: #2563eb;
         }
-        
+
         .button-secondary {
             background-color: #f9fafb;
             color: #374151;
             border: 1px solid #d1d5db;
         }
-        
+
         .button-secondary:hover {
             background-color: #f3f4f6;
         }
-        
+
         .select {
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
@@ -82,33 +83,33 @@
             background: white;
             min-width: 180px;
         }
-        
+
         .select:focus {
             outline: none;
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
-        
+
         .stat-card {
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 0.5rem;
             padding: 1rem;
         }
-        
+
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
             color: #111827;
         }
-        
+
         .stat-label {
             font-size: 0.875rem;
             color: #6b7280;
@@ -116,13 +117,14 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-gray-900 mb-2">Lord of Flies Analytics</h1>
             <p class="text-gray-600">Visualize and analyze score distributions across different datasets</p>
         </div>
-        
+
         <div class="mb-6 flex flex-wrap gap-4 items-center">
             <div>
                 <label for="datasetSelect" class="block text-sm font-medium text-gray-700 mb-2">Select Dataset:</label>
@@ -134,7 +136,7 @@
                     <option value="trollalot">Troll A Lot</option>
                 </select>
             </div>
-            
+
             <div>
                 <label for="binSize" class="block text-sm font-medium text-gray-700 mb-2">Bin Size:</label>
                 <select id="binSize" class="select">
@@ -144,12 +146,12 @@
                     <option value="100">100 points</option>
                 </select>
             </div>
-            
+
             <div class="flex items-end">
                 <button id="updateChart" class="button button-primary">Update Chart</button>
             </div>
         </div>
-        
+
         <!-- Statistics Cards -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -169,7 +171,7 @@
                 <div class="stat-label">Zero Scores</div>
             </div>
         </div>
-        
+
         <!-- Chart Card -->
         <div class="card">
             <div class="card-header">
@@ -182,7 +184,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Data Table -->
         <div class="card mt-8">
             <div class="card-header">
@@ -210,38 +212,2203 @@
     </div>
 
     <script>
+        // Inline JSON data
+        const rawData = {
+            'dood-bully': [
+                {
+                    "rank": "1",
+                    "name": "streetervilled1",
+                    "score": "321"
+                },
+                {
+                    "rank": "2",
+                    "name": "0nelinewonder",
+                    "score": "309"
+                },
+                {
+                    "rank": "3",
+                    "name": "santandood",
+                    "score": "307"
+                },
+                {
+                    "rank": "4",
+                    "name": "geist254",
+                    "score": "306"
+                },
+                {
+                    "rank": "5",
+                    "name": "oliver13h",
+                    "score": "303"
+                },
+                {
+                    "rank": "6",
+                    "name": "jivedoodle",
+                    "score": "301"
+                },
+                {
+                    "rank": "7",
+                    "name": "james_polhill",
+                    "score": "301"
+                },
+                {
+                    "rank": "8",
+                    "name": "opulentdecision",
+                    "score": "299"
+                },
+                {
+                    "rank": "9",
+                    "name": "tasty_snackz",
+                    "score": "293"
+                },
+                {
+                    "rank": "10",
+                    "name": "pufferupdoodle",
+                    "score": "279"
+                },
+                {
+                    "rank": "11",
+                    "name": "moonshotkongz",
+                    "score": "278"
+                },
+                {
+                    "rank": "12",
+                    "name": "mace1337ftw",
+                    "score": "278"
+                },
+                {
+                    "rank": "13",
+                    "name": "oidaeth",
+                    "score": "272"
+                },
+                {
+                    "rank": "14",
+                    "name": "cociboni",
+                    "score": "271"
+                },
+                {
+                    "rank": "15",
+                    "name": "doodcollects",
+                    "score": "270"
+                },
+                {
+                    "rank": "16",
+                    "name": "the_waco_kid1",
+                    "score": "270"
+                },
+                {
+                    "rank": "17",
+                    "name": "kayshhhmo",
+                    "score": "270"
+                },
+                {
+                    "rank": "18",
+                    "name": "0xbjartek",
+                    "score": "264"
+                },
+                {
+                    "rank": "19",
+                    "name": "ryrotaco",
+                    "score": "263"
+                },
+                {
+                    "rank": "20",
+                    "name": "montiweb3",
+                    "score": "263"
+                },
+                {
+                    "rank": "21",
+                    "name": "soybienmamon",
+                    "score": "261"
+                },
+                {
+                    "rank": "22",
+                    "name": "make_ithappenn",
+                    "score": "255"
+                },
+                {
+                    "rank": "23",
+                    "name": "nrd_design",
+                    "score": "254"
+                },
+                {
+                    "rank": "24",
+                    "name": "brucelane0",
+                    "score": "254"
+                },
+                {
+                    "rank": "25",
+                    "name": "km404atl",
+                    "score": "252"
+                },
+                {
+                    "rank": "26",
+                    "name": "outsidethe0x",
+                    "score": "251"
+                },
+                {
+                    "rank": "27",
+                    "name": "skeens_jeremy",
+                    "score": "250"
+                },
+                {
+                    "rank": "28",
+                    "name": "bitrise25",
+                    "score": "243"
+                },
+                {
+                    "rank": "29",
+                    "name": "doubtmeharder",
+                    "score": "238"
+                },
+                {
+                    "rank": "30",
+                    "name": "petranto12",
+                    "score": "217"
+                },
+                {
+                    "rank": "31",
+                    "name": "vonfrontin",
+                    "score": "204"
+                },
+                {
+                    "rank": "32",
+                    "name": "manaloclemens",
+                    "score": "200"
+                },
+                {
+                    "rank": "33",
+                    "name": "tonoboon",
+                    "score": "189"
+                },
+                {
+                    "rank": "34",
+                    "name": "ansonvita",
+                    "score": "187"
+                },
+                {
+                    "rank": "35",
+                    "name": "skr_ventures",
+                    "score": "182"
+                },
+                {
+                    "rank": "36",
+                    "name": "digikelly",
+                    "score": "181"
+                },
+                {
+                    "rank": "37",
+                    "name": "ericdzengeleski",
+                    "score": "181"
+                },
+                {
+                    "rank": "38",
+                    "name": "thenftshack",
+                    "score": "170"
+                },
+                {
+                    "rank": "39",
+                    "name": "bigdaddyerac",
+                    "score": "160"
+                },
+                {
+                    "rank": "40",
+                    "name": "mrcookiesnft",
+                    "score": "158"
+                },
+                {
+                    "rank": "41",
+                    "name": "happy_dood_",
+                    "score": "154"
+                },
+                {
+                    "rank": "42",
+                    "name": "tappi365",
+                    "score": "150"
+                },
+                {
+                    "rank": "43",
+                    "name": "hazy_purps",
+                    "score": "146"
+                },
+                {
+                    "rank": "44",
+                    "name": "dingo522left",
+                    "score": "135"
+                },
+                {
+                    "rank": "45",
+                    "name": "jfitz_21",
+                    "score": "134"
+                },
+                {
+                    "rank": "46",
+                    "name": "in2nfts",
+                    "score": "131"
+                },
+                {
+                    "rank": "47",
+                    "name": "ohtobisan",
+                    "score": "131"
+                },
+                {
+                    "rank": "48",
+                    "name": "concrete_barber",
+                    "score": "125"
+                },
+                {
+                    "rank": "49",
+                    "name": "squ1nch",
+                    "score": "93"
+                },
+                {
+                    "rank": "50",
+                    "name": "supermoooooo1",
+                    "score": "91"
+                },
+                {
+                    "rank": "51",
+                    "name": "conquant",
+                    "score": "77"
+                },
+                {
+                    "rank": "52",
+                    "name": "troyapeman",
+                    "score": "65"
+                },
+                {
+                    "rank": "53",
+                    "name": "aleon523",
+                    "score": "64"
+                },
+                {
+                    "rank": "54",
+                    "name": "yankun811203",
+                    "score": "54"
+                },
+                {
+                    "rank": "55",
+                    "name": "tungweb3",
+                    "score": "43"
+                },
+                {
+                    "rank": "56",
+                    "name": "yuehfengmon",
+                    "score": "39"
+                },
+                {
+                    "rank": "57",
+                    "name": "mr_meridian",
+                    "score": "28"
+                },
+                {
+                    "rank": "58",
+                    "name": "goofball851",
+                    "score": "25"
+                },
+                {
+                    "rank": "59",
+                    "name": "pukemrs",
+                    "score": "22"
+                },
+                {
+                    "rank": "60",
+                    "name": "chouyenchun1",
+                    "score": "20"
+                },
+                {
+                    "rank": "61",
+                    "name": "wax_weazle",
+                    "score": "17"
+                },
+                {
+                    "rank": "62",
+                    "name": "auscryptoboy",
+                    "score": "12"
+                },
+                {
+                    "rank": "63",
+                    "name": "bendogg79",
+                    "score": "11"
+                },
+                {
+                    "rank": "64",
+                    "name": "0xjunkim",
+                    "score": "10"
+                },
+                {
+                    "rank": "65",
+                    "name": "dreamcar_coin",
+                    "score": "10"
+                },
+                {
+                    "rank": "66",
+                    "name": "beecass_93",
+                    "score": "7"
+                },
+                {
+                    "rank": "67",
+                    "name": "0xfbm",
+                    "score": "4"
+                },
+                {
+                    "rank": "68",
+                    "name": "ryanhendler1",
+                    "score": "0"
+                },
+                {
+                    "rank": "69",
+                    "name": "favoriteloner",
+                    "score": "0"
+                },
+                {
+                    "rank": "70",
+                    "name": "riotact_",
+                    "score": "0"
+                },
+                {
+                    "rank": "71",
+                    "name": "bitorcom",
+                    "score": "0"
+                },
+                {
+                    "rank": "72",
+                    "name": "@OlabanjiOlalek2",
+                    "score": "0"
+                },
+                {
+                    "rank": "73",
+                    "name": "spacecowboy2300",
+                    "score": "0"
+                },
+                {
+                    "rank": "74",
+                    "name": "lordoftheidiot5",
+                    "score": "0"
+                },
+                {
+                    "rank": "75",
+                    "name": "maomin_9526",
+                    "score": "0"
+                },
+                {
+                    "rank": "76",
+                    "name": "vmaldonadoc204",
+                    "score": "0"
+                },
+                {
+                    "rank": "77",
+                    "name": "_kokishin",
+                    "score": "0"
+                },
+                {
+                    "rank": "78",
+                    "name": "wingnnit",
+                    "score": "0"
+                },
+                {
+                    "rank": "79",
+                    "name": "small__arms",
+                    "score": "0"
+                },
+                {
+                    "rank": "80",
+                    "name": "credzilla",
+                    "score": "0"
+                },
+                {
+                    "rank": "81",
+                    "name": "sushentalwar",
+                    "score": "0"
+                },
+                {
+                    "rank": "82",
+                    "name": "densesyntax",
+                    "score": "0"
+                },
+                {
+                    "rank": "83",
+                    "name": "majimeqqq",
+                    "score": "0"
+                },
+                {
+                    "rank": "84",
+                    "name": "niftydudes",
+                    "score": "0"
+                },
+                {
+                    "rank": "85",
+                    "name": "mriteeth",
+                    "score": "0"
+                },
+                {
+                    "rank": "86",
+                    "name": "datho09",
+                    "score": "0"
+                },
+                {
+                    "rank": "87",
+                    "name": "ginsu_eth",
+                    "score": "0"
+                },
+                {
+                    "rank": "88",
+                    "name": "atownbrown",
+                    "score": "0"
+                },
+                {
+                    "rank": "89",
+                    "name": "shuttergod",
+                    "score": "0"
+                },
+                {
+                    "rank": "90",
+                    "name": "7dubs",
+                    "score": "0"
+                },
+                {
+                    "rank": "91",
+                    "name": "farindet29clone",
+                    "score": "0"
+                },
+                {
+                    "rank": "92",
+                    "name": "oklepatzky",
+                    "score": "0"
+                },
+                {
+                    "rank": "93",
+                    "name": "dbrightnat",
+                    "score": "0"
+                },
+                {
+                    "rank": "94",
+                    "name": "nfungiblemotion",
+                    "score": "0"
+                },
+                {
+                    "rank": "95",
+                    "name": "wotwibot",
+                    "score": "0"
+                },
+                {
+                    "rank": "96",
+                    "name": "ManuismeNguyen",
+                    "score": "0"
+                },
+                {
+                    "rank": "97",
+                    "name": "canito_eth",
+                    "score": "0"
+                },
+                {
+                    "rank": "98",
+                    "name": "g01dy49",
+                    "score": "0"
+                },
+                {
+                    "rank": "99",
+                    "name": "Intyxfgt",
+                    "score": "0"
+                },
+                {
+                    "rank": "100",
+                    "name": "whoisetimfon",
+                    "score": "0"
+                }
+            ],
+            'doxmuddler': [
+                {
+                    "rank": "1",
+                    "name": "akiianurinmokz1",
+                    "score": "322"
+                },
+                {
+                    "rank": "2",
+                    "name": "ippy_world",
+                    "score": "321"
+                },
+                {
+                    "rank": "3",
+                    "name": "vanglog_eth",
+                    "score": "320"
+                },
+                {
+                    "rank": "4",
+                    "name": "dswagg_dmurph15",
+                    "score": "320"
+                },
+                {
+                    "rank": "5",
+                    "name": "ornimusmaximus",
+                    "score": "306"
+                },
+                {
+                    "rank": "6",
+                    "name": "jangdoocheon",
+                    "score": "304"
+                },
+                {
+                    "rank": "7",
+                    "name": "fakukam",
+                    "score": "302"
+                },
+                {
+                    "rank": "8",
+                    "name": "billybadass_eth",
+                    "score": "302"
+                },
+                {
+                    "rank": "9",
+                    "name": "tjc345",
+                    "score": "298"
+                },
+                {
+                    "rank": "10",
+                    "name": "0xringond",
+                    "score": "296"
+                },
+                {
+                    "rank": "11",
+                    "name": "jusomagi",
+                    "score": "295"
+                },
+                {
+                    "rank": "12",
+                    "name": "nftimot",
+                    "score": "295"
+                },
+                {
+                    "rank": "13",
+                    "name": "heyitsellebee",
+                    "score": "295"
+                },
+                {
+                    "rank": "14",
+                    "name": "stack_marketer",
+                    "score": "294"
+                },
+                {
+                    "rank": "15",
+                    "name": "spenc3eth",
+                    "score": "293"
+                },
+                {
+                    "rank": "16",
+                    "name": "maycl93300",
+                    "score": "288"
+                },
+                {
+                    "rank": "17",
+                    "name": "semage_",
+                    "score": "284"
+                },
+                {
+                    "rank": "18",
+                    "name": "jmraymonds",
+                    "score": "283"
+                },
+                {
+                    "rank": "19",
+                    "name": "methodsnft",
+                    "score": "281"
+                },
+                {
+                    "rank": "20",
+                    "name": "taekwonkrypto",
+                    "score": "280"
+                },
+                {
+                    "rank": "21",
+                    "name": "twixcashew",
+                    "score": "274"
+                },
+                {
+                    "rank": "22",
+                    "name": "ssano122",
+                    "score": "269"
+                },
+                {
+                    "rank": "23",
+                    "name": "jmrock4700",
+                    "score": "268"
+                },
+                {
+                    "rank": "24",
+                    "name": "thorlinck",
+                    "score": "267"
+                },
+                {
+                    "rank": "25",
+                    "name": "realfuple",
+                    "score": "266"
+                },
+                {
+                    "rank": "26",
+                    "name": "doodle2713",
+                    "score": "261"
+                },
+                {
+                    "rank": "27",
+                    "name": "0xed9",
+                    "score": "259"
+                },
+                {
+                    "rank": "28",
+                    "name": "_smx3_",
+                    "score": "257"
+                },
+                {
+                    "rank": "29",
+                    "name": "thestevenwarner",
+                    "score": "256"
+                },
+                {
+                    "rank": "30",
+                    "name": "iksvitzer",
+                    "score": "256"
+                },
+                {
+                    "rank": "31",
+                    "name": "0x630_",
+                    "score": "236"
+                },
+                {
+                    "rank": "32",
+                    "name": "artdoodart",
+                    "score": "227"
+                },
+                {
+                    "rank": "33",
+                    "name": "haroldr86",
+                    "score": "226"
+                },
+                {
+                    "rank": "34",
+                    "name": "troup__",
+                    "score": "224"
+                },
+                {
+                    "rank": "35",
+                    "name": "wetlensphotos",
+                    "score": "223"
+                },
+                {
+                    "rank": "36",
+                    "name": "pequelord",
+                    "score": "223"
+                },
+                {
+                    "rank": "37",
+                    "name": "wintek_nft",
+                    "score": "222"
+                },
+                {
+                    "rank": "38",
+                    "name": "jawrrwiii",
+                    "score": "220"
+                },
+                {
+                    "rank": "39",
+                    "name": "winterpopx",
+                    "score": "218"
+                },
+                {
+                    "rank": "40",
+                    "name": "jordan81668033",
+                    "score": "214"
+                },
+                {
+                    "rank": "41",
+                    "name": "paulomcg_",
+                    "score": "210"
+                },
+                {
+                    "rank": "42",
+                    "name": "john_acw",
+                    "score": "196"
+                },
+                {
+                    "rank": "43",
+                    "name": "maxie_abs",
+                    "score": "187"
+                },
+                {
+                    "rank": "44",
+                    "name": "csiixty",
+                    "score": "173"
+                },
+                {
+                    "rank": "45",
+                    "name": "doodlifts",
+                    "score": "172"
+                },
+                {
+                    "rank": "46",
+                    "name": "darkart",
+                    "score": "166"
+                },
+                {
+                    "rank": "47",
+                    "name": "porochun",
+                    "score": "161"
+                },
+                {
+                    "rank": "48",
+                    "name": "jamesgr84741652",
+                    "score": "146"
+                },
+                {
+                    "rank": "49",
+                    "name": "abwasabi",
+                    "score": "135"
+                },
+                {
+                    "rank": "50",
+                    "name": "jerrymeng1799",
+                    "score": "109"
+                },
+                {
+                    "rank": "51",
+                    "name": "zosoiv1971",
+                    "score": "106"
+                },
+                {
+                    "rank": "52",
+                    "name": "zach_engel98",
+                    "score": "99"
+                },
+                {
+                    "rank": "53",
+                    "name": "metamonster7777",
+                    "score": "95"
+                },
+                {
+                    "rank": "54",
+                    "name": "ricardodezoete",
+                    "score": "86"
+                },
+                {
+                    "rank": "55",
+                    "name": "dakaiboy",
+                    "score": "82"
+                },
+                {
+                    "rank": "56",
+                    "name": "aashmehtamusic",
+                    "score": "81"
+                },
+                {
+                    "rank": "57",
+                    "name": "sullyschwartz",
+                    "score": "81"
+                },
+                {
+                    "rank": "58",
+                    "name": "jpnspy",
+                    "score": "68"
+                },
+                {
+                    "rank": "59",
+                    "name": "chefbaycurry",
+                    "score": "65"
+                },
+                {
+                    "rank": "60",
+                    "name": "cryptot90",
+                    "score": "57"
+                },
+                {
+                    "rank": "61",
+                    "name": "ilendrick",
+                    "score": "57"
+                },
+                {
+                    "rank": "62",
+                    "name": "snowi_snowi",
+                    "score": "55"
+                },
+                {
+                    "rank": "63",
+                    "name": "fr3nchl0af",
+                    "score": "50"
+                },
+                {
+                    "rank": "64",
+                    "name": "dr_t1313",
+                    "score": "46"
+                },
+                {
+                    "rank": "65",
+                    "name": "stixhq",
+                    "score": "41"
+                },
+                {
+                    "rank": "66",
+                    "name": "shadab21x",
+                    "score": "40"
+                },
+                {
+                    "rank": "67",
+                    "name": "coinbubbleseth",
+                    "score": "34"
+                },
+                {
+                    "rank": "68",
+                    "name": "chiapudding000",
+                    "score": "28"
+                },
+                {
+                    "rank": "69",
+                    "name": "0xfired",
+                    "score": "28"
+                },
+                {
+                    "rank": "70",
+                    "name": "bigbullye",
+                    "score": "22"
+                },
+                {
+                    "rank": "71",
+                    "name": "0xneskaw",
+                    "score": "21"
+                },
+                {
+                    "rank": "72",
+                    "name": "waaaaaaaaccky",
+                    "score": "21"
+                },
+                {
+                    "rank": "73",
+                    "name": "breakwox",
+                    "score": "17"
+                },
+                {
+                    "rank": "74",
+                    "name": "iketheturtle",
+                    "score": "17"
+                },
+                {
+                    "rank": "75",
+                    "name": "gemg325",
+                    "score": "16"
+                },
+                {
+                    "rank": "76",
+                    "name": "beflean",
+                    "score": "16"
+                },
+                {
+                    "rank": "77",
+                    "name": "nmarinake",
+                    "score": "11"
+                },
+                {
+                    "rank": "78",
+                    "name": "jamaalism",
+                    "score": "9"
+                },
+                {
+                    "rank": "79",
+                    "name": "unkletio",
+                    "score": "8"
+                },
+                {
+                    "rank": "80",
+                    "name": "mohammadha3764",
+                    "score": "6"
+                },
+                {
+                    "rank": "81",
+                    "name": "wooooote",
+                    "score": "4"
+                },
+                {
+                    "rank": "82",
+                    "name": "@Crumpet_Eth",
+                    "score": "0"
+                },
+                {
+                    "rank": "83",
+                    "name": "waaea12",
+                    "score": "0"
+                },
+                {
+                    "rank": "84",
+                    "name": "alexmdc",
+                    "score": "0"
+                },
+                {
+                    "rank": "85",
+                    "name": "epdrabbit",
+                    "score": "0"
+                },
+                {
+                    "rank": "86",
+                    "name": "djdezree1",
+                    "score": "0"
+                },
+                {
+                    "rank": "87",
+                    "name": "vuralyalim",
+                    "score": "0"
+                },
+                {
+                    "rank": "88",
+                    "name": "fanisboudou",
+                    "score": "0"
+                },
+                {
+                    "rank": "89",
+                    "name": "clairebear_1437",
+                    "score": "0"
+                },
+                {
+                    "rank": "90",
+                    "name": "phillfarrugia",
+                    "score": "0"
+                },
+                {
+                    "rank": "91",
+                    "name": "@salimteymouri",
+                    "score": "0"
+                },
+                {
+                    "rank": "92",
+                    "name": "mohamme52092916",
+                    "score": "0"
+                },
+                {
+                    "rank": "93",
+                    "name": "jtsong2",
+                    "score": "0"
+                },
+                {
+                    "rank": "94",
+                    "name": "g_r_o_k_a_i",
+                    "score": "0"
+                },
+                {
+                    "rank": "95",
+                    "name": "stiffsol",
+                    "score": "0"
+                },
+                {
+                    "rank": "96",
+                    "name": "@coinbilly_",
+                    "score": "0"
+                },
+                {
+                    "rank": "97",
+                    "name": "fbazili",
+                    "score": "0"
+                },
+                {
+                    "rank": "98",
+                    "name": "enomiseno",
+                    "score": "0"
+                },
+                {
+                    "rank": "99",
+                    "name": "atom_157",
+                    "score": "0"
+                },
+                {
+                    "rank": "100",
+                    "name": "shiro_kishibe",
+                    "score": "0"
+                },
+                {
+                    "rank": "101",
+                    "name": "titomuhammadhs",
+                    "score": "0"
+                },
+                {
+                    "rank": "102",
+                    "name": "cryptopeterb",
+                    "score": "0"
+                },
+                {
+                    "rank": "103",
+                    "name": "fattigertv1",
+                    "score": "0"
+                },
+                {
+                    "rank": "104",
+                    "name": "cryptohunties",
+                    "score": "0"
+                },
+                {
+                    "rank": "105",
+                    "name": "adilhooda",
+                    "score": "0"
+                },
+                {
+                    "rank": "106",
+                    "name": "hettiecuttie",
+                    "score": "0"
+                },
+                {
+                    "rank": "107",
+                    "name": "marv_sun",
+                    "score": "0"
+                },
+                {
+                    "rank": "108",
+                    "name": "suv4301",
+                    "score": "0"
+                },
+                {
+                    "rank": "109",
+                    "name": "halodave12",
+                    "score": "0"
+                },
+                {
+                    "rank": "110",
+                    "name": "kriboidn",
+                    "score": "0"
+                },
+                {
+                    "rank": "111",
+                    "name": "kimchisquid",
+                    "score": "0"
+                },
+                {
+                    "rank": "112",
+                    "name": "sumhong1015",
+                    "score": "0"
+                },
+                {
+                    "rank": "113",
+                    "name": "micahonchain",
+                    "score": "0"
+                },
+                {
+                    "rank": "114",
+                    "name": "skylarmays4",
+                    "score": "0"
+                },
+                {
+                    "rank": "115",
+                    "name": "jnbf666",
+                    "score": "0"
+                },
+                {
+                    "rank": "116",
+                    "name": "marachadz",
+                    "score": "0"
+                },
+                {
+                    "rank": "117",
+                    "name": "theog_general",
+                    "score": "0"
+                },
+                {
+                    "rank": "118",
+                    "name": "chrissi_eth",
+                    "score": "0"
+                },
+                {
+                    "rank": "119",
+                    "name": "seanli27686",
+                    "score": "0"
+                },
+                {
+                    "rank": "120",
+                    "name": "0nefern",
+                    "score": "0"
+                },
+                {
+                    "rank": "121",
+                    "name": "riinitaa",
+                    "score": "0"
+                },
+                {
+                    "rank": "122",
+                    "name": "kadaramada60284",
+                    "score": "0"
+                },
+                {
+                    "rank": "123",
+                    "name": "eryckmob",
+                    "score": "0"
+                }
+            ],
+            'negativenancy': [
+                {
+                    "rank": "1",
+                    "name": "shiba_king1991",
+                    "score": "335"
+                },
+                {
+                    "rank": "2",
+                    "name": "kyleknows_",
+                    "score": "323"
+                },
+                {
+                    "rank": "3",
+                    "name": "utsukushisora",
+                    "score": "317"
+                },
+                {
+                    "rank": "4",
+                    "name": "stan0209_eth",
+                    "score": "316"
+                },
+                {
+                    "rank": "5",
+                    "name": "clevermoments",
+                    "score": "305"
+                },
+                {
+                    "rank": "6",
+                    "name": "vikki_arts",
+                    "score": "302"
+                },
+                {
+                    "rank": "7",
+                    "name": "cryptonoob221",
+                    "score": "296"
+                },
+                {
+                    "rank": "8",
+                    "name": "roopsnft",
+                    "score": "292"
+                },
+                {
+                    "rank": "9",
+                    "name": "itsbrb",
+                    "score": "285"
+                },
+                {
+                    "rank": "10",
+                    "name": "josemig59413139",
+                    "score": "284"
+                },
+                {
+                    "rank": "11",
+                    "name": "freezz09",
+                    "score": "283"
+                },
+                {
+                    "rank": "12",
+                    "name": "rohald",
+                    "score": "282"
+                },
+                {
+                    "rank": "13",
+                    "name": "darkdegenx",
+                    "score": "280"
+                },
+                {
+                    "rank": "14",
+                    "name": "anthonycartoons",
+                    "score": "279"
+                },
+                {
+                    "rank": "15",
+                    "name": "maxi_cp0",
+                    "score": "275"
+                },
+                {
+                    "rank": "16",
+                    "name": "wenlambocandle",
+                    "score": "274"
+                },
+                {
+                    "rank": "17",
+                    "name": "etothek_",
+                    "score": "271"
+                },
+                {
+                    "rank": "18",
+                    "name": "metabloxx",
+                    "score": "269"
+                },
+                {
+                    "rank": "19",
+                    "name": "p1nkcybertruck",
+                    "score": "268"
+                },
+                {
+                    "rank": "20",
+                    "name": "tosche_",
+                    "score": "265"
+                },
+                {
+                    "rank": "21",
+                    "name": "roybotmfer",
+                    "score": "262"
+                },
+                {
+                    "rank": "22",
+                    "name": "xoraverse",
+                    "score": "261"
+                },
+                {
+                    "rank": "23",
+                    "name": "cageranch",
+                    "score": "252"
+                },
+                {
+                    "rank": "24",
+                    "name": "cryptokingf1",
+                    "score": "251"
+                },
+                {
+                    "rank": "25",
+                    "name": "805jdub",
+                    "score": "249"
+                },
+                {
+                    "rank": "26",
+                    "name": "ausbro80",
+                    "score": "248"
+                },
+                {
+                    "rank": "27",
+                    "name": "bigcubanisland",
+                    "score": "246"
+                },
+                {
+                    "rank": "28",
+                    "name": "0xstreeder",
+                    "score": "244"
+                },
+                {
+                    "rank": "29",
+                    "name": "blackshibawolf",
+                    "score": "241"
+                },
+                {
+                    "rank": "30",
+                    "name": "thelazerace",
+                    "score": "225"
+                },
+                {
+                    "rank": "31",
+                    "name": "ch3xican",
+                    "score": "222"
+                },
+                {
+                    "rank": "32",
+                    "name": "volkanerisir",
+                    "score": "216"
+                },
+                {
+                    "rank": "33",
+                    "name": "sivxrtx",
+                    "score": "212"
+                },
+                {
+                    "rank": "34",
+                    "name": "namebran40",
+                    "score": "206"
+                },
+                {
+                    "rank": "35",
+                    "name": "thebullishtradr",
+                    "score": "202"
+                },
+                {
+                    "rank": "36",
+                    "name": "silentmodedm",
+                    "score": "187"
+                },
+                {
+                    "rank": "37",
+                    "name": "deryaart_",
+                    "score": "184"
+                },
+                {
+                    "rank": "38",
+                    "name": "ruliz_gonzalez",
+                    "score": "182"
+                },
+                {
+                    "rank": "39",
+                    "name": "leathersosoft7",
+                    "score": "178"
+                },
+                {
+                    "rank": "40",
+                    "name": "hakisein",
+                    "score": "172"
+                },
+                {
+                    "rank": "41",
+                    "name": "aa_ron_90",
+                    "score": "154"
+                },
+                {
+                    "rank": "42",
+                    "name": "_twigzzz",
+                    "score": "151"
+                },
+                {
+                    "rank": "43",
+                    "name": "aapebad",
+                    "score": "136"
+                },
+                {
+                    "rank": "44",
+                    "name": "kky0699",
+                    "score": "128"
+                },
+                {
+                    "rank": "45",
+                    "name": "0xpsyched",
+                    "score": "117"
+                },
+                {
+                    "rank": "46",
+                    "name": "cowboytraits",
+                    "score": "115"
+                },
+                {
+                    "rank": "47",
+                    "name": "k_sideri",
+                    "score": "109"
+                },
+                {
+                    "rank": "48",
+                    "name": "takarita118",
+                    "score": "105"
+                },
+                {
+                    "rank": "49",
+                    "name": "duemers_",
+                    "score": "101"
+                },
+                {
+                    "rank": "50",
+                    "name": "l_u_c_e_e_d",
+                    "score": "86"
+                },
+                {
+                    "rank": "51",
+                    "name": "29jewel",
+                    "score": "68"
+                },
+                {
+                    "rank": "52",
+                    "name": "empty_labs",
+                    "score": "60"
+                },
+                {
+                    "rank": "53",
+                    "name": "vilkhur",
+                    "score": "59"
+                },
+                {
+                    "rank": "54",
+                    "name": "humahumami",
+                    "score": "59"
+                },
+                {
+                    "rank": "55",
+                    "name": "ogzgzynftholder",
+                    "score": "54"
+                },
+                {
+                    "rank": "56",
+                    "name": "logdefi",
+                    "score": "43"
+                },
+                {
+                    "rank": "57",
+                    "name": "eepylabs",
+                    "score": "42"
+                },
+                {
+                    "rank": "58",
+                    "name": "chrishu40576020",
+                    "score": "40"
+                },
+                {
+                    "rank": "59",
+                    "name": "greenie_sr",
+                    "score": "38"
+                },
+                {
+                    "rank": "60",
+                    "name": "albertergart",
+                    "score": "37"
+                },
+                {
+                    "rank": "61",
+                    "name": "zkpawky",
+                    "score": "34"
+                },
+                {
+                    "rank": "62",
+                    "name": "poppypunky",
+                    "score": "30"
+                },
+                {
+                    "rank": "63",
+                    "name": "papinono_nft",
+                    "score": "26"
+                },
+                {
+                    "rank": "64",
+                    "name": "hanley_keith",
+                    "score": "25"
+                },
+                {
+                    "rank": "65",
+                    "name": "thebinarycoder",
+                    "score": "25"
+                },
+                {
+                    "rank": "66",
+                    "name": "optipunkone",
+                    "score": "24"
+                },
+                {
+                    "rank": "67",
+                    "name": "smortyair",
+                    "score": "23"
+                },
+                {
+                    "rank": "68",
+                    "name": "merts_eth",
+                    "score": "17"
+                },
+                {
+                    "rank": "69",
+                    "name": "notdroll",
+                    "score": "16"
+                },
+                {
+                    "rank": "70",
+                    "name": "kilayr",
+                    "score": "16"
+                },
+                {
+                    "rank": "71",
+                    "name": "0xkhazar",
+                    "score": "9"
+                },
+                {
+                    "rank": "72",
+                    "name": "_ppzin",
+                    "score": "7"
+                },
+                {
+                    "rank": "73",
+                    "name": "starl3xx",
+                    "score": "7"
+                },
+                {
+                    "rank": "74",
+                    "name": "brownthom",
+                    "score": "2"
+                },
+                {
+                    "rank": "75",
+                    "name": "pitbul13",
+                    "score": "1"
+                },
+                {
+                    "rank": "76",
+                    "name": "falconz_eth",
+                    "score": "0"
+                },
+                {
+                    "rank": "77",
+                    "name": "gonzo_wins",
+                    "score": "0"
+                },
+                {
+                    "rank": "78",
+                    "name": "jazzpill_",
+                    "score": "0"
+                },
+                {
+                    "rank": "79",
+                    "name": "alpurrt_",
+                    "score": "0"
+                },
+                {
+                    "rank": "80",
+                    "name": "fastclick__",
+                    "score": "0"
+                },
+                {
+                    "rank": "81",
+                    "name": "0xphoenixinvest",
+                    "score": "0"
+                },
+                {
+                    "rank": "82",
+                    "name": "giiipuff",
+                    "score": "0"
+                },
+                {
+                    "rank": "83",
+                    "name": "sebastien_xyz",
+                    "score": "0"
+                },
+                {
+                    "rank": "84",
+                    "name": "baycgel",
+                    "score": "0"
+                },
+                {
+                    "rank": "85",
+                    "name": "kish_t_a",
+                    "score": "0"
+                },
+                {
+                    "rank": "86",
+                    "name": "juuukaaay",
+                    "score": "0"
+                },
+                {
+                    "rank": "87",
+                    "name": "tamnhaneth",
+                    "score": "0"
+                },
+                {
+                    "rank": "88",
+                    "name": "ethantheghoul",
+                    "score": "0"
+                },
+                {
+                    "rank": "89",
+                    "name": "whunder_eth",
+                    "score": "0"
+                },
+                {
+                    "rank": "90",
+                    "name": "louishoodie",
+                    "score": "0"
+                },
+                {
+                    "rank": "91",
+                    "name": "_eye5_",
+                    "score": "0"
+                },
+                {
+                    "rank": "92",
+                    "name": "xu_bai54328",
+                    "score": "0"
+                },
+                {
+                    "rank": "93",
+                    "name": "domefunai",
+                    "score": "0"
+                },
+                {
+                    "rank": "94",
+                    "name": "theprmpl",
+                    "score": "0"
+                },
+                {
+                    "rank": "95",
+                    "name": "byshagrath_",
+                    "score": "0"
+                },
+                {
+                    "rank": "96",
+                    "name": "jujujayb",
+                    "score": "0"
+                },
+                {
+                    "rank": "97",
+                    "name": "0xpetty",
+                    "score": "0"
+                },
+                {
+                    "rank": "98",
+                    "name": "PokePosts_",
+                    "score": "0"
+                },
+                {
+                    "rank": "99",
+                    "name": "dobaethdoba",
+                    "score": "0"
+                },
+                {
+                    "rank": "100",
+                    "name": "leo84117780",
+                    "score": "0"
+                },
+                {
+                    "rank": "101",
+                    "name": "osakaflakka",
+                    "score": "0"
+                },
+                {
+                    "rank": "102",
+                    "name": "itsthe90sagain",
+                    "score": "0"
+                },
+                {
+                    "rank": "103",
+                    "name": "justrecess_",
+                    "score": "0"
+                },
+                {
+                    "rank": "104",
+                    "name": "mreazi33",
+                    "score": "0"
+                },
+                {
+                    "rank": "105",
+                    "name": "mahmoud07766",
+                    "score": "0"
+                },
+                {
+                    "rank": "106",
+                    "name": "sweetlikesaul",
+                    "score": "0"
+                }
+            ],
+            'trollalot': [
+                {
+                    "rank": "1",
+                    "name": "mcvault11",
+                    "score": "325"
+                },
+                {
+                    "rank": "2",
+                    "name": "akamoney_eth",
+                    "score": "322"
+                },
+                {
+                    "rank": "3",
+                    "name": "kuyamark",
+                    "score": "319"
+                },
+                {
+                    "rank": "4",
+                    "name": "ernestcline11",
+                    "score": "317"
+                },
+                {
+                    "rank": "5",
+                    "name": "atari_god",
+                    "score": "313"
+                },
+                {
+                    "rank": "6",
+                    "name": "redwooddawg",
+                    "score": "302"
+                },
+                {
+                    "rank": "7",
+                    "name": "lunavonhresvelg",
+                    "score": "302"
+                },
+                {
+                    "rank": "8",
+                    "name": "spacecowboycat",
+                    "score": "299"
+                },
+                {
+                    "rank": "9",
+                    "name": "steven34568146",
+                    "score": "298"
+                },
+                {
+                    "rank": "10",
+                    "name": "happybrad_eth",
+                    "score": "296"
+                },
+                {
+                    "rank": "11",
+                    "name": "nftcrazykrc",
+                    "score": "294"
+                },
+                {
+                    "rank": "12",
+                    "name": "yulei___",
+                    "score": "292"
+                },
+                {
+                    "rank": "13",
+                    "name": "jwilkerss",
+                    "score": "287"
+                },
+                {
+                    "rank": "14",
+                    "name": "sumopickle",
+                    "score": "284"
+                },
+                {
+                    "rank": "15",
+                    "name": "robottiandrea",
+                    "score": "283"
+                },
+                {
+                    "rank": "16",
+                    "name": "angharad_spen",
+                    "score": "282"
+                },
+                {
+                    "rank": "17",
+                    "name": "thepeacedout",
+                    "score": "281"
+                },
+                {
+                    "rank": "18",
+                    "name": "wangbinfeng2",
+                    "score": "275"
+                },
+                {
+                    "rank": "19",
+                    "name": "polandjim",
+                    "score": "274"
+                },
+                {
+                    "rank": "20",
+                    "name": "lakoz_",
+                    "score": "274"
+                },
+                {
+                    "rank": "21",
+                    "name": "webmixgamer",
+                    "score": "268"
+                },
+                {
+                    "rank": "22",
+                    "name": "papapsalmsllama",
+                    "score": "264"
+                },
+                {
+                    "rank": "23",
+                    "name": "mastersofcoins",
+                    "score": "260"
+                },
+                {
+                    "rank": "24",
+                    "name": "jasmarkangeles",
+                    "score": "258"
+                },
+                {
+                    "rank": "25",
+                    "name": "reesistancee",
+                    "score": "255"
+                },
+                {
+                    "rank": "26",
+                    "name": "ste85gra",
+                    "score": "252"
+                },
+                {
+                    "rank": "27",
+                    "name": "watermonter",
+                    "score": "246"
+                },
+                {
+                    "rank": "28",
+                    "name": "bene_bla",
+                    "score": "245"
+                },
+                {
+                    "rank": "29",
+                    "name": "lw1826504067",
+                    "score": "242"
+                },
+                {
+                    "rank": "30",
+                    "name": "filippobazzoli",
+                    "score": "239"
+                },
+                {
+                    "rank": "31",
+                    "name": "samplaysgolf",
+                    "score": "237"
+                },
+                {
+                    "rank": "32",
+                    "name": "reekjpeg",
+                    "score": "237"
+                },
+                {
+                    "rank": "33",
+                    "name": "kasmir_eth",
+                    "score": "235"
+                },
+                {
+                    "rank": "34",
+                    "name": "lukey___pookie",
+                    "score": "228"
+                },
+                {
+                    "rank": "35",
+                    "name": "pauncheth",
+                    "score": "225"
+                },
+                {
+                    "rank": "36",
+                    "name": "poloman1982",
+                    "score": "218"
+                },
+                {
+                    "rank": "37",
+                    "name": "faresnightnft",
+                    "score": "194"
+                },
+                {
+                    "rank": "38",
+                    "name": "iamshabbazz",
+                    "score": "191"
+                },
+                {
+                    "rank": "39",
+                    "name": "8270eth",
+                    "score": "180"
+                },
+                {
+                    "rank": "40",
+                    "name": "dannye2004",
+                    "score": "175"
+                },
+                {
+                    "rank": "41",
+                    "name": "___j___w_",
+                    "score": "175"
+                },
+                {
+                    "rank": "42",
+                    "name": "maybepeykal",
+                    "score": "171"
+                },
+                {
+                    "rank": "43",
+                    "name": "drip_flover",
+                    "score": "162"
+                },
+                {
+                    "rank": "44",
+                    "name": "barthazian",
+                    "score": "151"
+                },
+                {
+                    "rank": "45",
+                    "name": "chickenwizardx",
+                    "score": "141"
+                },
+                {
+                    "rank": "46",
+                    "name": "ksk2088394",
+                    "score": "138"
+                },
+                {
+                    "rank": "47",
+                    "name": "vandy1518",
+                    "score": "136"
+                },
+                {
+                    "rank": "48",
+                    "name": "nfthoarder888",
+                    "score": "135"
+                },
+                {
+                    "rank": "49",
+                    "name": "minnesotahaze",
+                    "score": "132"
+                },
+                {
+                    "rank": "50",
+                    "name": "humpstyles",
+                    "score": "130"
+                },
+                {
+                    "rank": "51",
+                    "name": "p3te_eth",
+                    "score": "122"
+                },
+                {
+                    "rank": "52",
+                    "name": "fernlovescrypto",
+                    "score": "109"
+                },
+                {
+                    "rank": "53",
+                    "name": "kramarcollects",
+                    "score": "101"
+                },
+                {
+                    "rank": "54",
+                    "name": "fiscalbits",
+                    "score": "99"
+                },
+                {
+                    "rank": "55",
+                    "name": "d34thst4lker",
+                    "score": "91"
+                },
+                {
+                    "rank": "56",
+                    "name": "ggharial",
+                    "score": "82"
+                },
+                {
+                    "rank": "57",
+                    "name": "__diso",
+                    "score": "73"
+                },
+                {
+                    "rank": "58",
+                    "name": "dgtlemissions",
+                    "score": "60"
+                },
+                {
+                    "rank": "59",
+                    "name": "godbreakerbtc",
+                    "score": "57"
+                },
+                {
+                    "rank": "60",
+                    "name": "nftspooky",
+                    "score": "50"
+                },
+                {
+                    "rank": "61",
+                    "name": "ladyapefundy",
+                    "score": "39"
+                },
+                {
+                    "rank": "62",
+                    "name": "heytedward",
+                    "score": "39"
+                },
+                {
+                    "rank": "63",
+                    "name": "solarsoundwave",
+                    "score": "32"
+                },
+                {
+                    "rank": "64",
+                    "name": "zx07353502",
+                    "score": "28"
+                },
+                {
+                    "rank": "65",
+                    "name": "_dcfc13",
+                    "score": "27"
+                },
+                {
+                    "rank": "66",
+                    "name": "duis_eth",
+                    "score": "27"
+                },
+                {
+                    "rank": "67",
+                    "name": "wendy58152",
+                    "score": "26"
+                },
+                {
+                    "rank": "68",
+                    "name": "bibdieu",
+                    "score": "26"
+                },
+                {
+                    "rank": "69",
+                    "name": "bbtntwrk",
+                    "score": "17"
+                },
+                {
+                    "rank": "70",
+                    "name": "fungibles_nft",
+                    "score": "16"
+                },
+                {
+                    "rank": "71",
+                    "name": "luckyphillydad",
+                    "score": "15"
+                },
+                {
+                    "rank": "72",
+                    "name": "drari1080",
+                    "score": "14"
+                },
+                {
+                    "rank": "73",
+                    "name": "henftee",
+                    "score": "14"
+                },
+                {
+                    "rank": "74",
+                    "name": "tracey_plowman",
+                    "score": "11"
+                },
+                {
+                    "rank": "75",
+                    "name": "jj_br0ther",
+                    "score": "10"
+                },
+                {
+                    "rank": "76",
+                    "name": "alleycatnft",
+                    "score": "9"
+                },
+                {
+                    "rank": "77",
+                    "name": "0xamica",
+                    "score": "8"
+                },
+                {
+                    "rank": "78",
+                    "name": "ronny_j_912",
+                    "score": "7"
+                },
+                {
+                    "rank": "79",
+                    "name": "rezzonico",
+                    "score": "5"
+                },
+                {
+                    "rank": "80",
+                    "name": "fundyape3659",
+                    "score": "4"
+                },
+                {
+                    "rank": "81",
+                    "name": "niftymateo",
+                    "score": "3"
+                },
+                {
+                    "rank": "82",
+                    "name": "vibesforreal1",
+                    "score": "0"
+                },
+                {
+                    "rank": "83",
+                    "name": "plckleap",
+                    "score": "0"
+                },
+                {
+                    "rank": "84",
+                    "name": "aleyprobably",
+                    "score": "0"
+                },
+                {
+                    "rank": "85",
+                    "name": "igor_3000a",
+                    "score": "0"
+                },
+                {
+                    "rank": "86",
+                    "name": "boredpan888",
+                    "score": "0"
+                },
+                {
+                    "rank": "87",
+                    "name": "goodgr8grossman",
+                    "score": "0"
+                },
+                {
+                    "rank": "88",
+                    "name": "dallaserrico",
+                    "score": "0"
+                },
+                {
+                    "rank": "89",
+                    "name": "holonaut0",
+                    "score": "0"
+                },
+                {
+                    "rank": "90",
+                    "name": "weekendtrader1",
+                    "score": "0"
+                },
+                {
+                    "rank": "91",
+                    "name": "sooperceed",
+                    "score": "0"
+                },
+                {
+                    "rank": "92",
+                    "name": "olucrown1402",
+                    "score": "0"
+                },
+                {
+                    "rank": "93",
+                    "name": "kidgonzo",
+                    "score": "0"
+                },
+                {
+                    "rank": "94",
+                    "name": "crypt0xninja",
+                    "score": "0"
+                },
+                {
+                    "rank": "95",
+                    "name": "riffrighteous",
+                    "score": "0"
+                },
+                {
+                    "rank": "96",
+                    "name": "vhils1",
+                    "score": "0"
+                },
+                {
+                    "rank": "97",
+                    "name": "laudomiamedici",
+                    "score": "0"
+                },
+                {
+                    "rank": "98",
+                    "name": "gabrielnovaes88",
+                    "score": "0"
+                },
+                {
+                    "rank": "99",
+                    "name": "teabux",
+                    "score": "0"
+                },
+                {
+                    "rank": "100",
+                    "name": "arduieth",
+                    "score": "0"
+                },
+                {
+                    "rank": "101",
+                    "name": "x11eth",
+                    "score": "0"
+                },
+                {
+                    "rank": "102",
+                    "name": "ambrosiniiiii",
+                    "score": "0"
+                },
+                {
+                    "rank": "103",
+                    "name": "aaronr5274",
+                    "score": "0"
+                }
+            ]
+        };
+
         // Data storage
         let allData = {};
         let currentChart = null;
-        
-        // Load all JSON data
-        async function loadData() {
-            const datasets = ['dood-bully', 'doxmuddler', 'negativenancy', 'trollalot'];
-            
-            for (const dataset of datasets) {
-                try {
-                    const response = await fetch(`./data/${dataset}.json`);
-                    const data = await response.json();
-                    allData[dataset] = data.map(item => ({
-                        ...item,
-                        score: parseInt(item.score),
-                        rank: parseInt(item.rank)
-                    }));
-                } catch (error) {
-                    console.error(`Error loading ${dataset}:`, error);
-                }
+
+        // Initialize data from inline JSON
+        function loadData() {
+            // Process raw data and convert strings to numbers
+            for (const [dataset, data] of Object.entries(rawData)) {
+                allData[dataset] = data.map(item => ({
+                    ...item,
+                    score: parseInt(item.score),
+                    rank: parseInt(item.rank)
+                }));
             }
-            
+
             // Initial chart render
             updateVisualization();
         }
-        
+
         // Create histogram data
         function createHistogramData(data, binSize) {
             const scores = data.map(item => item.score);
             const maxScore = Math.max(...scores);
             const minScore = Math.min(...scores);
-            
+
             // Create bins
             const bins = [];
             for (let i = minScore; i <= maxScore; i += binSize) {
@@ -252,7 +2419,7 @@
                     label: `${i}-${i + binSize - 1}`
                 });
             }
-            
+
             // Count scores in each bin
             scores.forEach(score => {
                 const binIndex = Math.floor((score - minScore) / binSize);
@@ -260,10 +2427,10 @@
                     bins[binIndex].count++;
                 }
             });
-            
+
             return bins;
         }
-        
+
         // Update statistics
         function updateStats(data) {
             const scores = data.map(item => item.score);
@@ -271,21 +2438,21 @@
             const avgScore = scores.reduce((a, b) => a + b, 0) / totalUsers;
             const maxScore = Math.max(...scores);
             const zeroScores = scores.filter(score => score === 0).length;
-            
+
             document.getElementById('totalUsers').textContent = totalUsers.toLocaleString();
             document.getElementById('avgScore').textContent = avgScore.toFixed(1);
             document.getElementById('maxScore').textContent = maxScore.toLocaleString();
             document.getElementById('zeroScores').textContent = zeroScores.toLocaleString();
         }
-        
+
         // Update top performers table
         function updateTopPerformers(data, datasetName) {
             const sortedData = [...data].sort((a, b) => b.score - a.score);
             const top10 = sortedData.slice(0, 10);
-            
+
             const tableBody = document.getElementById('topPerformersTable');
             tableBody.innerHTML = '';
-            
+
             top10.forEach((user, index) => {
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-gray-50';
@@ -302,15 +2469,15 @@
                 tableBody.appendChild(row);
             });
         }
-        
+
         // Update chart and visualization
         function updateVisualization() {
             const selectedDataset = document.getElementById('datasetSelect').value;
             const binSize = parseInt(document.getElementById('binSize').value);
-            
+
             let data = [];
             let datasetName = '';
-            
+
             if (selectedDataset === 'all') {
                 // Combine all datasets
                 data = Object.values(allData).flat();
@@ -319,25 +2486,25 @@
                 data = allData[selectedDataset] || [];
                 datasetName = selectedDataset.charAt(0).toUpperCase() + selectedDataset.slice(1).replace('-', ' ');
             }
-            
+
             if (data.length === 0) return;
-            
+
             // Create histogram
             const histogramData = createHistogramData(data, binSize);
-            
+
             // Update statistics
             updateStats(data);
-            
+
             // Update top performers
             updateTopPerformers(data, datasetName);
-            
+
             // Update chart
             const ctx = document.getElementById('histogramChart').getContext('2d');
-            
+
             if (currentChart) {
                 currentChart.destroy();
             }
-            
+
             currentChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -384,14 +2551,15 @@
                 }
             });
         }
-        
+
         // Event listeners
         document.getElementById('updateChart').addEventListener('click', updateVisualization);
         document.getElementById('datasetSelect').addEventListener('change', updateVisualization);
         document.getElementById('binSize').addEventListener('change', updateVisualization);
-        
+
         // Initialize
         loadData();
     </script>
 </body>
+
 </html>
