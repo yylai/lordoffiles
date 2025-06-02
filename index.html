@@ -116,6 +116,15 @@
             margin-top: 0.25rem;
         }
 
+        /* Manager icons */
+        .manager-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
         /* Background overlay to reduce contrast */
         body::before {
             content: '';
@@ -138,7 +147,8 @@
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-gray-900 mb-2">
                 Lord of Files Analytics
-                <a href="#disclaimer" class="text-xs text-gray-500 ml-2 hover:text-gray-700 underline">(data disclaimer)</a>
+                <a href="#disclaimer" class="text-xs text-gray-500 ml-2 hover:text-gray-700 underline">(data
+                    disclaimer)</a>
             </h1>
             <p class="text-gray-600">Visualize and analyze score distributions across different departments</p>
         </div>
@@ -195,7 +205,10 @@
         <!-- Chart Card -->
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title">Score Distribution Histogram</h2>
+                <h2 class="card-title flex items-center">
+                    <span id="histogramIcon" class="mr-3"></span>
+                    Score Distribution Histogram
+                </h2>
                 <p class="card-description">Distribution of user scores across the selected department(s)</p>
             </div>
             <div class="card-content">
@@ -229,7 +242,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Disclaimer -->
         <div id="disclaimer" class="mt-16 p-6 bg-gray-100 border-t border-gray-200">
             <div class="text-center">
@@ -2422,10 +2435,18 @@
 
         // Department manager mapping
         const departmentManagers = {
-            'dood-bully': 'Dood Bully',
+            'dood-bully': 'Bully The Kid',
             'doxmuddler': 'Dox Muddler',
             'negativenancy': 'Negative Nancy',
-            'trollalot': 'Troll A Lot'
+            'trollalot': 'Sir TrollzALot'
+        };
+
+        // Manager icons mapping
+        const managerIcons = {
+            'dood-bully': 'images/bully_overlord_noicon.webp',
+            'doxmuddler': 'images/conspiracy_overlord_no_icon.webp',
+            'negativenancy': 'images/bearish_overlord_noicon.webp',
+            'trollalot': 'images/troll_overlord_no_icon.webp'
         };
 
         // Initialize data from inline JSON
@@ -2555,6 +2576,14 @@
 
             if (currentChart) {
                 currentChart.destroy();
+            }
+
+            // Update histogram icon
+            const histogramIconElement = document.getElementById('histogramIcon');
+            if (selectedDataset !== 'all' && managerIcons[selectedDataset]) {
+                histogramIconElement.innerHTML = `<img src="${managerIcons[selectedDataset]}" alt="${datasetName}" class="manager-icon">`;
+            } else {
+                histogramIconElement.innerHTML = '';
             }
 
             currentChart = new Chart(ctx, {
