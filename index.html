@@ -166,6 +166,14 @@
             </div>
 
             <div>
+                <label for="chartType" class="block text-sm font-medium text-gray-700 mb-2">Chart Type:</label>
+                <select id="chartType" class="select">
+                    <option value="powerlaw">Rank Distribution</option>
+                    <option value="histogram">Score Histogram</option>
+                </select>
+            </div>
+
+            <div id="binSizeContainer" style="display: none;">
                 <label for="binSize" class="block text-sm font-medium text-gray-700 mb-2">Bin Size:</label>
                 <select id="binSize" class="select">
                     <option value="1">1 point</option>
@@ -175,6 +183,7 @@
                     <option value="100">100 points</option>
                 </select>
             </div>
+
 
         </div>
 
@@ -207,9 +216,9 @@
             <div class="card-header">
                 <h2 class="card-title flex items-center">
                     <span id="histogramIcon" class="mr-3"></span>
-                    Score Distribution Histogram
+                    <span id="chartTitle">Score Distribution (Power Law Analysis)</span>
                 </h2>
-                <p class="card-description">Distribution of user scores across the selected department(s)</p>
+                <p id="chartDescription" class="card-description">Users ranked by score (highest to lowest) to visualize power law distribution</p>
             </div>
             <div class="card-content">
                 <div style="position: relative; height: 400px;">
@@ -2465,6 +2474,18 @@
             updateVisualization();
         }
 
+        // Create rank distribution data (users ranked by score)
+        function createPowerLawData(data) {
+            // Sort users by score in descending order
+            const sortedData = [...data].sort((a, b) => b.score - a.score);
+            
+            // Create labels and scores arrays
+            const labels = sortedData.map((_, index) => `Rank ${index + 1}`);
+            const scores = sortedData.map(user => user.score);
+            
+            return { labels, scores, sortedData };
+        }
+
         // Create histogram data
         function createHistogramData(data, binSize) {
             const scores = data.map(item => item.score);
@@ -2546,7 +2567,12 @@
         // Update chart and visualization
         function updateVisualization() {
             const selectedDataset = document.getElementById('datasetSelect').value;
-            const binSize = parseInt(document.getElementById('binSize').value);
+            const chartType = document.getElementById('chartType').value;
+            const binSize = parseInt(document.getElementById('binSize').value || 25);
+            
+            // Show/hide bin size selector based on chart type
+            const binSizeContainer = document.getElementById('binSizeContainer');
+            binSizeContainer.style.display = chartType === 'histogram' ? 'block' : 'none';
 
             let data = [];
             let datasetName = '';
@@ -2554,7 +2580,7 @@
             if (selectedDataset === 'all') {
                 // Combine all datasets
                 data = Object.values(allData).flat();
-                datasetName = 'All Datasets';
+                datasetName = 'All Departments';
             } else {
                 data = allData[selectedDataset] || [];
                 datasetName = selectedDataset.charAt(0).toUpperCase() + selectedDataset.slice(1).replace('-', ' ');
@@ -2562,8 +2588,17 @@
 
             if (data.length === 0) return;
 
-            // Create histogram
-            const histogramData = createHistogramData(data, binSize);
+            // Update chart title and description
+            const chartTitle = document.getElementById('chartTitle');
+            const chartDescription = document.getElementById('chartDescription');
+            
+            if (chartType === 'powerlaw') {
+                chartTitle.textContent = 'Score Distribution (Rank Distribution)';
+                chartDescription.textContent = 'Users ranked by score (highest to lowest) to visualize score concentration';
+            } else {
+                chartTitle.textContent = 'Score Distribution Histogram';
+                chartDescription.textContent = 'Distribution of user scores across the selected department(s)';
+            }
 
             // Update statistics
             updateStats(data);
@@ -2586,55 +2621,132 @@
                 histogramIconElement.innerHTML = '';
             }
 
-            currentChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: histogramData.map(bin => bin.label),
-                    datasets: [{
-                        label: 'Number of Users',
-                        data: histogramData.map(bin => bin.count),
-                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: `Score Distribution - ${datasetName}`,
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            }
-                        },
-                        legend: {
-                            display: false
-                        }
+            if (chartType === 'powerlaw') {
+                // Create power law data
+                const powerLawData = createPowerLawData(data);
+                
+                currentChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: powerLawData.labels,
+                        datasets: [{
+                            label: 'User Score',
+                            data: powerLawData.scores,
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        plugins: {
                             title: {
                                 display: true,
-                                text: 'Number of Users'
+                                text: `Rank Distribution - ${datasetName}`,
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function(context) {
+                                        const index = context[0].dataIndex;
+                                        const user = powerLawData.sortedData[index];
+                                        return `Rank #${index + 1}: ${user.name}`;
+                                    },
+                                    label: function(context) {
+                                        return `Score: ${context.parsed.y.toLocaleString()}`;
+                                    }
+                                }
                             }
                         },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Score Range'
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Score'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'User Rank (Highest to Lowest Score)'
+                                },
+                                ticks: {
+                                    maxTicksLimit: 10
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                // Create histogram data
+                const histogramData = createHistogramData(data, binSize);
+                
+                currentChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: histogramData.map(bin => bin.label),
+                        datasets: [{
+                            label: 'Number of Users',
+                            data: histogramData.map(bin => bin.count),
+                            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `Score Distribution - ${datasetName}`,
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Users'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Score Range'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         // Event listeners
         document.getElementById('datasetSelect').addEventListener('change', updateVisualization);
+        document.getElementById('chartType').addEventListener('change', updateVisualization);
         document.getElementById('binSize').addEventListener('change', updateVisualization);
 
         // Initialize
