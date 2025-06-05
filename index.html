@@ -228,6 +228,23 @@
                 <p class="card-description">Users with the highest scores in the selected department</p>
             </div>
             <div class="card-content">
+                <div class="mb-4 flex flex-wrap justify-between items-end">
+                    <div>
+                        <label for="tableDepartmentFilter" class="block text-sm font-medium text-gray-700 mb-1">Department:</label>
+                        <select id="tableDepartmentFilter" class="select">
+                            <option value="all">All</option>
+                            <option value="bully">Bully The Kid</option>
+                            <option value="doxmuddler">Dox Muddler</option>
+                            <option value="negativenancy">Negative Nancy</option>
+                            <option value="trollalot">Sir TrollzALot</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="prevPage" class="button button-secondary">Prev</button>
+                        <span class="text-sm" id="pageInfo"></span>
+                        <button id="nextPage" class="button button-secondary">Next</button>
+                    </div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
@@ -2392,12 +2409,18 @@
         };
 
         // Manager icons mapping
-        const managerIcons = {
+const managerIcons = {
             'bully': 'images/bully_overlord_noicon.webp',
             'doxmuddler': 'images/conspiracy_overlord_no_icon.webp',
             'negativenancy': 'images/bearish_overlord_noicon.webp',
             'trollalot': 'images/troll_overlord_no_icon.webp'
-        };
+};
+
+        // Pagination state for the top performers table
+        let tableData = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let totalPages = 1;
 
         // Initialize data from inline JSON
         function loadData() {
@@ -2479,22 +2502,29 @@
             document.getElementById('zeroScores').textContent = `${zeroScores.toLocaleString()} (${zeroScorePercentage}%)`;
         }
 
-        // Update top performers table
-        function updateTopPerformers(data, selectedDataset) {
-            const sortedData = [...data].sort((a, b) => b.score - a.score);
-            const top10 = sortedData.slice(0, 10);
+        // Update top performers table with pagination
+        function updateTopPerformers(data) {
+            tableData = [...data].sort((a, b) => b.score - a.score);
+            totalPages = Math.max(1, Math.ceil(tableData.length / itemsPerPage));
+            currentPage = Math.min(currentPage, totalPages);
+            renderTablePage();
+        }
 
+        function renderTablePage() {
             const tableBody = document.getElementById('topPerformersTable');
             tableBody.innerHTML = '';
 
-            top10.forEach((user, index) => {
+            const start = (currentPage - 1) * itemsPerPage;
+            const pageItems = tableData.slice(start, start + itemsPerPage);
+
+            pageItems.forEach((user, index) => {
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-gray-50';
 
                 const departmentManager = user.departmentManager || 'Unknown';
 
                 row.innerHTML = `
-                    <td class="py-2 px-4">${index + 1}</td>
+                    <td class="py-2 px-4">${start + index + 1}</td>
                     <td class="py-2 px-4 font-medium">${user.name}</td>
                     <td class="py-2 px-4">${user.score.toLocaleString()}</td>
                     <td class="py-2 px-4">
@@ -2505,6 +2535,11 @@
                 `;
                 tableBody.appendChild(row);
             });
+
+            const pageInfo = document.getElementById('pageInfo');
+            pageInfo.textContent = `Page ${currentPage} / ${totalPages}`;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
         }
 
         // Update chart and visualization
@@ -2547,7 +2582,7 @@
             updateStats(data);
 
             // Update top performers
-            updateTopPerformers(data, selectedDataset);
+            updateTopPerformers(data);
 
             // Update chart
             const ctx = document.getElementById('histogramChart').getContext('2d');
@@ -2688,9 +2723,35 @@
         }
 
         // Event listeners
-        document.getElementById('datasetSelect').addEventListener('change', updateVisualization);
+        document.getElementById('datasetSelect').addEventListener('change', () => {
+            document.getElementById('tableDepartmentFilter').value = document.getElementById('datasetSelect').value;
+            updateVisualization();
+        });
         document.getElementById('chartType').addEventListener('change', updateVisualization);
         document.getElementById('binSize').addEventListener('change', updateVisualization);
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTablePage();
+            }
+        });
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTablePage();
+            }
+        });
+        document.getElementById('tableDepartmentFilter').addEventListener('change', () => {
+            currentPage = 1;
+            const selected = document.getElementById('tableDepartmentFilter').value;
+            let data = [];
+            if (selected === 'all') {
+                data = Object.values(allData).flat();
+            } else {
+                data = allData[selected] || [];
+            }
+            updateTopPerformers(data);
+        });
 
         // Initialize
         loadData();
