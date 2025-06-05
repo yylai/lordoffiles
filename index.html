@@ -2526,7 +2526,9 @@
                 datasetName = 'All Departments';
             } else {
                 data = allData[selectedDataset] || [];
-                datasetName = selectedDataset.charAt(0).toUpperCase() + selectedDataset.slice(1).replace('-', ' ');
+                datasetName = departmentManagers[selectedDataset] ||
+                    (selectedDataset.charAt(0).toUpperCase() +
+                     selectedDataset.slice(1).replace('-', ' '));
             }
 
             if (data.length === 0) return;
