@@ -2398,6 +2398,15 @@
         let currentTableData = [];
         let currentTableDataset = 'all';
         let searchQuery = '';
+        // Store previous statistics for animation
+        let previousStats = {
+            totalUsers: 0,
+            totalScore: 0,
+            avgScore: 0,
+            maxScore: 0,
+            medianScore: 0,
+            zeroScores: 0
+        };
 
         // Department manager mapping
         const departmentManagers = {
@@ -2471,6 +2480,22 @@
             return bins;
         }
 
+        // Animate numeric changes for statistics
+        function animateValue(id, start, end, duration, formatter) {
+            const element = document.getElementById(id);
+            const range = end - start;
+            const startTime = performance.now();
+            function step(currentTime) {
+                const progress = Math.min((currentTime - startTime) / duration, 1);
+                const value = start + range * progress;
+                element.textContent = formatter(value);
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
         // Update statistics
         function updateStats(data) {
             const scores = data.map(item => item.score);
@@ -2486,13 +2511,16 @@
                 ? (sortedScores[sortedScores.length / 2 - 1] + sortedScores[sortedScores.length / 2]) / 2
                 : sortedScores[Math.floor(sortedScores.length / 2)];
 
-            document.getElementById('totalUsers').textContent = totalUsers.toLocaleString();
-            document.getElementById('totalScore').textContent = totalScore.toLocaleString();
-            document.getElementById('avgScore').textContent = avgScore.toFixed(1);
-            document.getElementById('maxScore').textContent = maxScore.toLocaleString();
-            document.getElementById('medianScore').textContent = medianScore.toLocaleString();
-            const zeroScorePercentage = ((zeroScores / totalUsers) * 100).toFixed(1);
-            document.getElementById('zeroScores').textContent = `${zeroScores.toLocaleString()} (${zeroScorePercentage}%)`;
+
+            animateValue('totalUsers', previousStats.totalUsers, totalUsers, 500, v => Math.round(v).toLocaleString());
+            animateValue('totalScore', previousStats.totalScore, totalScore, 500, v => Math.round(v).toLocaleString());
+            animateValue('avgScore', previousStats.avgScore, avgScore, 500, v => v.toFixed(1));
+            animateValue('maxScore', previousStats.maxScore, maxScore, 500, v => Math.round(v).toLocaleString());
+            animateValue('medianScore', previousStats.medianScore, medianScore, 500, v => Math.round(v).toLocaleString());
+            animateValue('zeroScores', previousStats.zeroScores, zeroScores, 500,
+                v => `${Math.round(v).toLocaleString()} (${((v / totalUsers) * 100).toFixed(1)}%)`);
+
+            previousStats = { totalUsers, totalScore, avgScore, maxScore, medianScore, zeroScores };
         }
 
         // Update top performers table
