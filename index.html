@@ -2501,12 +2501,34 @@
                 user.name.toLowerCase().includes(searchQuery)
             );
             const sortedData = [...filteredData].sort((a, b) => b.score - a.score);
-            currentTableData = sortedData;
+            
+            // Calculate global ranks if "All" is selected, otherwise preserve original ranks
+            let dataWithRanks;
+            if (selectedDataset === 'all') {
+                // Create a map of all users sorted by score to get global ranks
+                const allSortedData = [...data].sort((a, b) => b.score - a.score);
+                const globalRankMap = new Map();
+                allSortedData.forEach((user, index) => {
+                    const key = `${user.name}_${user.score}_${user.departmentManager}`;
+                    globalRankMap.set(key, index + 1);
+                });
+                
+                // Apply global ranks to sorted data
+                dataWithRanks = sortedData.map(user => ({
+                    ...user,
+                    globalRank: globalRankMap.get(`${user.name}_${user.score}_${user.departmentManager}`)
+                }));
+            } else {
+                // Use original department ranks
+                dataWithRanks = sortedData;
+            }
+            
+            currentTableData = dataWithRanks;
             currentTableDataset = selectedDataset;
-            const totalPages = Math.max(1, Math.ceil(sortedData.length / rowsPerPage));
+            const totalPages = Math.max(1, Math.ceil(dataWithRanks.length / rowsPerPage));
             if (currentPage > totalPages) currentPage = totalPages;
             const startIndex = (currentPage - 1) * rowsPerPage;
-            const pageData = sortedData.slice(startIndex, startIndex + rowsPerPage);
+            const pageData = dataWithRanks.slice(startIndex, startIndex + rowsPerPage);
 
             const tableBody = document.getElementById('topPerformersTable');
             tableBody.innerHTML = '';
@@ -2527,9 +2549,10 @@
                 row.className = 'border-b hover:bg-gray-50';
 
                 const departmentManager = user.departmentManager || 'Unknown';
+                const displayRank = selectedDataset === 'all' ? user.globalRank : user.rank;
 
                 row.innerHTML = `
-                    <td class="py-2 px-4">${startIndex + index + 1}</td>
+                    <td class="py-2 px-4">${displayRank}</td>
                     <td class="py-2 px-4 font-medium">${user.name}</td>
                     <td class="py-2 px-4">${user.score.toLocaleString()}</td>
                     <td class="py-2 px-4">
