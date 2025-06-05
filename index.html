@@ -231,6 +231,9 @@
                 <p class="card-description">Users with the highest scores in the selected department</p>
             </div>
             <div class="card-content">
+                <div class="flex justify-end mb-2">
+                    <input id="searchInput" type="text" placeholder="Search by name" class="select" />
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
@@ -2394,6 +2397,7 @@
         let currentPage = 1;
         let currentTableData = [];
         let currentTableDataset = 'all';
+        let searchQuery = '';
 
         // Department manager mapping
         const departmentManagers = {
@@ -2493,7 +2497,10 @@
 
         // Update top performers table
         function updateTopPerformers(data, selectedDataset) {
-            const sortedData = [...data].sort((a, b) => b.score - a.score);
+            const filteredData = data.filter(user =>
+                user.name.toLowerCase().includes(searchQuery)
+            );
+            const sortedData = [...filteredData].sort((a, b) => b.score - a.score);
             currentTableData = sortedData;
             currentTableDataset = selectedDataset;
             const totalPages = Math.max(1, Math.ceil(sortedData.length / rowsPerPage));
@@ -2740,6 +2747,19 @@
                 currentPage++;
                 updateTopPerformers(currentTableData, currentTableDataset);
             }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            currentPage = 1;
+            const selectedDataset = document.getElementById('datasetSelect').value;
+            let data = [];
+            if (selectedDataset === 'all') {
+                data = Object.values(allData).flat();
+            } else {
+                data = allData[selectedDataset] || [];
+            }
+            updateTopPerformers(data, selectedDataset);
         });
 
         // Initialize
