@@ -246,6 +246,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="flex items-center justify-between mt-4">
+                    <button id="prevPage" class="button button-secondary">Previous</button>
+                    <span id="pageInfo" class="text-sm text-gray-600"></span>
+                    <button id="nextPage" class="button button-secondary">Next</button>
+                </div>
             </div>
         </div>
 
@@ -2385,6 +2390,10 @@
         // Data storage
         let allData = {};
         let currentChart = null;
+        const rowsPerPage = 10;
+        let currentPage = 1;
+        let currentTableData = [];
+        let currentTableDataset = 'all';
 
         // Department manager mapping
         const departmentManagers = {
@@ -2485,7 +2494,12 @@
         // Update top performers table
         function updateTopPerformers(data, selectedDataset) {
             const sortedData = [...data].sort((a, b) => b.score - a.score);
-            const top10 = sortedData.slice(0, 10);
+            currentTableData = sortedData;
+            currentTableDataset = selectedDataset;
+            const totalPages = Math.max(1, Math.ceil(sortedData.length / rowsPerPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const pageData = sortedData.slice(startIndex, startIndex + rowsPerPage);
 
             const tableBody = document.getElementById('topPerformersTable');
             tableBody.innerHTML = '';
@@ -2501,14 +2515,14 @@
                 performersIconElement.innerHTML = '';
             }
 
-            top10.forEach((user, index) => {
+            pageData.forEach((user, index) => {
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-gray-50';
 
                 const departmentManager = user.departmentManager || 'Unknown';
 
                 row.innerHTML = `
-                    <td class="py-2 px-4">${index + 1}</td>
+                    <td class="py-2 px-4">${startIndex + index + 1}</td>
                     <td class="py-2 px-4 font-medium">${user.name}</td>
                     <td class="py-2 px-4">${user.score.toLocaleString()}</td>
                     <td class="py-2 px-4">
@@ -2519,13 +2533,20 @@
                 `;
                 tableBody.appendChild(row);
             });
+
+            // Update pagination info
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
         }
 
         // Update chart and visualization
-        function updateVisualization() {
-            const selectedDataset = document.getElementById('datasetSelect').value;
-            const chartType = document.getElementById('chartType').value;
-            const binSize = parseInt(document.getElementById('binSize').value || 25);
+       function updateVisualization() {
+           const selectedDataset = document.getElementById('datasetSelect').value;
+           const chartType = document.getElementById('chartType').value;
+           const binSize = parseInt(document.getElementById('binSize').value || 25);
+
+            currentPage = 1;
 
             // Show/hide bin size selector based on chart type
             const binSizeContainer = document.getElementById('binSizeContainer');
@@ -2707,6 +2728,19 @@
         document.getElementById('datasetSelect').addEventListener('change', updateVisualization);
         document.getElementById('chartType').addEventListener('change', updateVisualization);
         document.getElementById('binSize').addEventListener('change', updateVisualization);
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateTopPerformers(currentTableData, currentTableDataset);
+            }
+        });
+        document.getElementById('nextPage').addEventListener('click', () => {
+            const totalPages = Math.max(1, Math.ceil(currentTableData.length / rowsPerPage));
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateTopPerformers(currentTableData, currentTableDataset);
+            }
+        });
 
         // Initialize
         loadData();
