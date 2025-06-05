@@ -767,13 +767,13 @@
             'doxmuddler': [
                 {
                     "rank": "1",
-                    "name": "ippy_world",
-                    "score": "367"
+                    "name": "akiianurinmokz1",
+                    "score": "393"
                 },
                 {
                     "rank": "2",
-                    "name": "akiianurinmokz1",
-                    "score": "367"
+                    "name": "fakukam",
+                    "score": "377"
                 },
                 {
                     "rank": "3",
@@ -782,33 +782,33 @@
                 },
                 {
                     "rank": "4",
+                    "name": "ippy_world",
+                    "score": "367"
+                },
+                {
+                    "rank": "5",
                     "name": "ornimusmaximus",
                     "score": "363"
                 },
                 {
-                    "rank": "5",
+                    "rank": "6",
                     "name": "dswagg_dmurph15",
                     "score": "362"
                 },
                 {
-                    "rank": "6",
+                    "rank": "7",
                     "name": "nftimot",
                     "score": "361"
                 },
                 {
-                    "rank": "7",
+                    "rank": "8",
                     "name": "spenc3eth",
                     "score": "358"
                 },
                 {
-                    "rank": "8",
+                    "rank": "9",
                     "name": "tjc345",
                     "score": "355"
-                },
-                {
-                    "rank": "9",
-                    "name": "stack_marketer",
-                    "score": "352"
                 },
                 {
                     "rank": "10",
@@ -822,8 +822,8 @@
                 },
                 {
                     "rank": "12",
-                    "name": "fakukam",
-                    "score": "351"
+                    "name": "stack_marketer",
+                    "score": "352"
                 },
                 {
                     "rank": "13",
@@ -837,53 +837,53 @@
                 },
                 {
                     "rank": "15",
+                    "name": "jangdoocheon",
+                    "score": "343"
+                },
+                {
+                    "rank": "16",
                     "name": "heyitsellebee",
                     "score": "337"
                 },
                 {
-                    "rank": "16",
+                    "rank": "17",
                     "name": "methodsnft",
                     "score": "333"
                 },
                 {
-                    "rank": "17",
+                    "rank": "18",
                     "name": "semage_",
                     "score": "333"
                 },
                 {
-                    "rank": "18",
+                    "rank": "19",
                     "name": "0xed9",
                     "score": "331"
                 },
                 {
-                    "rank": "19",
-                    "name": "jangdoocheon",
-                    "score": "331"
+                    "rank": "20",
+                    "name": "twixcashew",
+                    "score": "327"
                 },
                 {
-                    "rank": "20",
+                    "rank": "21",
                     "name": "thorlinck",
                     "score": "324"
                 },
                 {
-                    "rank": "21",
+                    "rank": "22",
                     "name": "taekwonkrypto",
                     "score": "317"
                 },
                 {
-                    "rank": "22",
+                    "rank": "23",
                     "name": "ssano122",
                     "score": "314"
                 },
                 {
-                    "rank": "23",
+                    "rank": "24",
                     "name": "thestevenwarner",
                     "score": "313"
-                },
-                {
-                    "rank": "24",
-                    "name": "twixcashew",
-                    "score": "309"
                 },
                 {
                     "rank": "25",
@@ -1504,23 +1504,23 @@
                 },
                 {
                     "rank": "26",
+                    "name": "bigcubanisland",
+                    "score": "274"
+                },
+                {
+                    "rank": "27",
+                    "name": "namebran40",
+                    "score": "273"
+                },
+                {
+                    "rank": "28",
                     "name": "metabloxx",
                     "score": "269"
                 },
                 {
-                    "rank": "27",
+                    "rank": "29",
                     "name": "0xstreeder",
                     "score": "269"
-                },
-                {
-                    "rank": "28",
-                    "name": "namebran40",
-                    "score": "266"
-                },
-                {
-                    "rank": "29",
-                    "name": "bigcubanisland",
-                    "score": "263"
                 },
                 {
                     "rank": "30",
@@ -2506,9 +2506,9 @@
 
             // Update performers icon
             const performersIconElement = document.getElementById('performersIcon');
-            const datasetName = selectedDataset === 'all' ? 'All Departments' : 
+            const datasetName = selectedDataset === 'all' ? 'All Departments' :
                 (departmentManagers[selectedDataset] || selectedDataset);
-            
+
             if (selectedDataset !== 'all' && managerIcons[selectedDataset]) {
                 performersIconElement.innerHTML = `<img src="${managerIcons[selectedDataset]}" alt="${datasetName}" class="manager-icon">`;
             } else {
@@ -2541,10 +2541,10 @@
         }
 
         // Update chart and visualization
-       function updateVisualization() {
-           const selectedDataset = document.getElementById('datasetSelect').value;
-           const chartType = document.getElementById('chartType').value;
-           const binSize = parseInt(document.getElementById('binSize').value || 25);
+        function updateVisualization() {
+            const selectedDataset = document.getElementById('datasetSelect').value;
+            const chartType = document.getElementById('chartType').value;
+            const binSize = parseInt(document.getElementById('binSize').value || 25);
 
             currentPage = 1;
 
@@ -2563,7 +2563,7 @@
                 data = allData[selectedDataset] || [];
                 datasetName = departmentManagers[selectedDataset] ||
                     (selectedDataset.charAt(0).toUpperCase() +
-                     selectedDataset.slice(1).replace('-', ' '));
+                        selectedDataset.slice(1).replace('-', ' '));
             }
 
             if (data.length === 0) return;
