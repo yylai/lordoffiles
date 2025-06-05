@@ -224,7 +224,10 @@
         <!-- Data Table -->
         <div class="card mt-8">
             <div class="card-header">
-                <h2 class="card-title">Top Performers</h2>
+                <h2 class="card-title flex items-center">
+                    <span id="performersIcon" class="mr-3"></span>
+                    <span>Top Performers</span>
+                </h2>
                 <p class="card-description">Users with the highest scores in the selected department</p>
             </div>
             <div class="card-content">
@@ -2486,6 +2489,17 @@
 
             const tableBody = document.getElementById('topPerformersTable');
             tableBody.innerHTML = '';
+
+            // Update performers icon
+            const performersIconElement = document.getElementById('performersIcon');
+            const datasetName = selectedDataset === 'all' ? 'All Departments' : 
+                (departmentManagers[selectedDataset] || selectedDataset);
+            
+            if (selectedDataset !== 'all' && managerIcons[selectedDataset]) {
+                performersIconElement.innerHTML = `<img src="${managerIcons[selectedDataset]}" alt="${datasetName}" class="manager-icon">`;
+            } else {
+                performersIconElement.innerHTML = '';
+            }
 
             top10.forEach((user, index) => {
                 const row = document.createElement('tr');
