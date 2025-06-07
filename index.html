@@ -123,6 +123,25 @@
             border-radius: 8px;
             object-fit: cover;
             margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Prevent layout shifts */
+        .stat-card {
+            min-height: 80px;
+        }
+
+        .card-title {
+            min-height: 2rem;
+        }
+
+        /* Ensure stable icon container */
+        #performersIcon,
+        #histogramIcon {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            vertical-align: middle;
         }
 
         /* Background overlay to reduce contrast */
@@ -2696,12 +2715,16 @@
         let currentStats = {
             totalUsers: 0,
             totalScore: 0,
+            totalLives: 0,
             avgScore: 0,
             maxScore: 0,
             medianScore: 0,
-            zeroScores: 0,
-            zeroScorePercentage: 0
+            zeroScores: 0
         };
+
+        // Animation control
+        let animationFrames = [];
+        let updateTimeout = null;
 
         // Department manager mapping
         const departmentManagers = {
@@ -2861,40 +2884,49 @@
             return bins;
         }
 
+        // Cancel all running animations
+        function cancelAnimations() {
+            animationFrames.forEach(frame => cancelAnimationFrame(frame));
+            animationFrames = [];
+        }
+
         // Animate a number from start to end
-        function animateNumber(id, start, end, formatFn, duration = 500) {
+        function animateNumber(id, start, end, formatFn, duration = 300) {
             const el = document.getElementById(id);
             if (!el) return;
+            
+            // Skip animation if values are the same
+            if (start === end) {
+                el.textContent = formatFn(end);
+                return;
+            }
+            
             const startTime = performance.now();
 
             function update(now) {
                 const progress = Math.min((now - startTime) / duration, 1);
                 const value = start + (end - start) * progress;
                 el.textContent = formatFn(value);
-                if (progress < 1) requestAnimationFrame(update);
+                
+                if (progress < 1) {
+                    const frame = requestAnimationFrame(update);
+                    animationFrames.push(frame);
+                } else {
+                    // Remove completed animation frame
+                    animationFrames = animationFrames.filter(f => f !== frame);
+                }
             }
 
-            requestAnimationFrame(update);
+            const frame = requestAnimationFrame(update);
+            animationFrames.push(frame);
         }
 
-        // Animate zero score count and percentage
-        function animateZeroScores(startCount, endCount, startPct, endPct, duration = 500) {
-            const el = document.getElementById('zeroScores');
-            const startTime = performance.now();
 
-            function update(now) {
-                const progress = Math.min((now - startTime) / duration, 1);
-                const val = startCount + (endCount - startCount) * progress;
-                const pctVal = startPct + (endPct - startPct) * progress;
-                el.textContent = `${Math.round(val).toLocaleString()} (${pctVal.toFixed(1)}%)`;
-                if (progress < 1) requestAnimationFrame(update);
-            }
-
-            requestAnimationFrame(update);
-        }
-
-        // Update statistics
+        // Update statistics with debouncing
         function updateStats(data) {
+            // Cancel any previous animations
+            cancelAnimations();
+            
             const scores = data.map(item => item.score);
             const lives = data.map(item => item.lives);
             const totalUsers = data.length;
@@ -2911,15 +2943,13 @@
                 ? (sortedScores[sortedScores.length / 2 - 1] + sortedScores[sortedScores.length / 2]) / 2
                 : sortedScores[Math.floor(sortedScores.length / 2)];
 
-            const zeroScorePercentage = (zeroScores / totalUsers) * 100;
-
             animateNumber('totalUsers', currentStats.totalUsers, totalUsers, v => Math.round(v).toLocaleString());
             animateNumber('totalScore', currentStats.totalScore, totalScore, v => Math.round(v).toLocaleString());
             animateNumber('totalLives', currentStats.totalLives || 0, totalLives, v => Math.round(v).toLocaleString());
             animateNumber('avgScore', currentStats.avgScore, avgScore, v => v.toFixed(1));
             animateNumber('maxScore', currentStats.maxScore, maxScore, v => Math.round(v).toLocaleString());
             animateNumber('medianScore', currentStats.medianScore, medianScore, v => Math.round(v).toLocaleString());
-            animateZeroScores(currentStats.zeroScores, zeroScores, currentStats.zeroScorePercentage, zeroScorePercentage);
+            animateNumber('zeroScores', currentStats.zeroScores, zeroScores, v => Math.round(v).toLocaleString());
 
             currentStats = {
                 totalUsers,
@@ -2928,8 +2958,7 @@
                 avgScore,
                 maxScore,
                 medianScore,
-                zeroScores,
-                zeroScorePercentage
+                zeroScores
             };
         }
 
@@ -3194,8 +3223,22 @@
             }
         }
 
-        // Event listeners
-        document.getElementById('datasetSelect').addEventListener('change', updateVisualization);
+        // Debounced update function
+        function debouncedUpdateVisualization() {
+            // Cancel any pending update
+            if (updateTimeout) {
+                clearTimeout(updateTimeout);
+            }
+            
+            // Schedule new update
+            updateTimeout = setTimeout(() => {
+                updateVisualization();
+                updateTimeout = null;
+            }, 50);
+        }
+
+        // Event listeners with debouncing
+        document.getElementById('datasetSelect').addEventListener('change', debouncedUpdateVisualization);
         document.getElementById('chartType').addEventListener('change', updateVisualization);
         document.getElementById('binSize').addEventListener('change', updateVisualization);
         document.getElementById('prevPage').addEventListener('click', () => {
