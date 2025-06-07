@@ -4,6 +4,7 @@ const results = Array.from(rows).map(row => {
   return {
     rank: children[0]?.textContent.trim(),
     name: children[1]?.textContent.trim(),
+    lives: children[3]?.querySelector('div').textContent.trim(),
     score: children[4]?.querySelector('div').textContent.trim()
   };
 });
