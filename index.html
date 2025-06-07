@@ -139,6 +139,119 @@
             opacity: 0.2;
             z-index: -1;
         }
+
+        /* Department ranking cards */
+        .dept-rank-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dept-rank-card.rank-1 {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, #fef3c7 0%, #ffffff 100%);
+        }
+
+        .dept-rank-card.rank-2 {
+            border-color: #9ca3af;
+            background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
+        }
+
+        .dept-rank-card.rank-3 {
+            border-color: #d97706;
+            background: linear-gradient(135deg, #fed7aa 0%, #ffffff 100%);
+        }
+
+        .dept-rank-card[data-department="bully"] {
+            background: rgba(129, 134, 94, 0.2);
+            border-color: rgba(129, 134, 94, 0.5);
+        }
+
+        .dept-rank-card[data-department="doxmuddler"] {
+            background: rgba(95, 97, 135, 0.2);
+            border-color: rgba(95, 97, 135, 0.5);
+        }
+
+        .dept-rank-card[data-department="negativenancy"] {
+            background: rgba(127, 96, 134, 0.2);
+            border-color: rgba(127, 96, 134, 0.5);
+        }
+
+        .dept-rank-card[data-department="trollalot"] {
+            background: rgba(136, 96, 96, 0.2);
+            border-color: rgba(136, 96, 96, 0.5);
+        }
+
+        .dept-rank-card[data-department="bully"] .dept-rank-number {
+            background-color: rgb(129, 134, 94);
+            color: white;
+        }
+
+        .dept-rank-card[data-department="doxmuddler"] .dept-rank-number {
+            background-color: rgb(95, 97, 135);
+            color: white;
+        }
+
+        .dept-rank-card[data-department="negativenancy"] .dept-rank-number {
+            background-color: rgb(127, 96, 134);
+            color: white;
+        }
+
+        .dept-rank-card[data-department="trollalot"] .dept-rank-number {
+            background-color: rgb(136, 96, 96);
+            color: white;
+        }
+
+        .dept-rank-number {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        .dept-rank-number.rank-1 {
+            background-color: #fbbf24;
+            color: white;
+        }
+
+        .dept-rank-number.rank-2 {
+            background-color: #9ca3af;
+            color: white;
+        }
+
+        .dept-rank-number.rank-3 {
+            background-color: #d97706;
+            color: white;
+        }
+
+        .dept-rank-number.rank-4 {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        .dept-manager-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .dept-manager-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.75rem;
+        }
     </style>
 </head>
 
@@ -218,6 +331,19 @@
             <div class="stat-card">
                 <div class="stat-value" id="zeroScores">-</div>
                 <div class="stat-label">Zero Scores</div>
+            </div>
+        </div>
+
+        <!-- Department Rankings Card -->
+        <div class="card mt-8">
+            <div class="card-header">
+                <h2 class="card-title">Department Rankings</h2>
+                <p class="card-description">Total scores and performance ranking by department manager</p>
+            </div>
+            <div class="card-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="departmentRankings">
+                    <!-- Department ranking cards will be populated by JavaScript -->
+                </div>
             </div>
         </div>
 
@@ -2228,8 +2354,80 @@
                 }));
             }
 
-            // Initial chart render
+            // Initial chart render and department rankings
+            updateDepartmentRankings();
             updateVisualization();
+        }
+
+        // Update department rankings card
+        function updateDepartmentRankings() {
+            const departmentStats = [];
+
+            // Calculate stats for each department
+            for (const [dataset, data] of Object.entries(allData)) {
+                const scores = data.map(item => item.score);
+                const totalScore = scores.reduce((a, b) => a + b, 0);
+                const userCount = data.length;
+                const avgScore = totalScore / userCount;
+                const maxScore = Math.max(...scores);
+                const topUser = data.find(user => user.score === maxScore);
+
+                departmentStats.push({
+                    dataset,
+                    name: departmentManagers[dataset],
+                    totalScore,
+                    userCount,
+                    avgScore,
+                    maxScore,
+                    topUser: topUser.name,
+                    icon: managerIcons[dataset]
+                });
+            }
+
+            // Sort by total score (descending)
+            departmentStats.sort((a, b) => b.totalScore - a.totalScore);
+
+            // Update the UI
+            const container = document.getElementById('departmentRankings');
+            container.innerHTML = '';
+
+            departmentStats.forEach((dept, index) => {
+                const rank = index + 1;
+                const card = document.createElement('div');
+                card.className = `dept-rank-card rank-${rank}`;
+                card.setAttribute('data-department', dept.dataset);
+
+                card.innerHTML = `
+                    <div class="dept-rank-number rank-${rank}">${rank}</div>
+                    <div class="dept-manager-info">
+                        <img src="${dept.icon}" alt="${dept.name}" class="dept-manager-icon">
+                        <div>
+                            <div class="font-semibold text-gray-900">${dept.name}</div>
+                            <div class="text-xs text-gray-600">Top: ${dept.topUser}</div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Total Score:</span>
+                            <span class="font-semibold">${dept.totalScore.toLocaleString()}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Users:</span>
+                            <span class="font-semibold">${dept.userCount}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Avg Score:</span>
+                            <span class="font-semibold">${dept.avgScore.toFixed(1)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Max Score:</span>
+                            <span class="font-semibold">${dept.maxScore.toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
         }
 
         // Create rank distribution data (users ranked by score)
