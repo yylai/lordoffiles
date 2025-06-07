@@ -3103,7 +3103,9 @@
 
             // Update histogram icon
             const histogramIconElement = document.getElementById('histogramIcon');
-            if (selectedDataset !== 'all' && managerIcons[selectedDataset]) {
+            if (selectedDataset === 'all') {
+                histogramIconElement.innerHTML = `<img src="images/data_box_icon.png" alt="${datasetName}" class="manager-icon">`;
+            } else if (managerIcons[selectedDataset]) {
                 histogramIconElement.innerHTML = `<img src="${managerIcons[selectedDataset]}" alt="${datasetName}" class="manager-icon">`;
             } else {
                 histogramIconElement.innerHTML = '';
