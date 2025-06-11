@@ -376,6 +376,7 @@
                                     <th class="text-left py-2 px-4 font-medium text-gray-900">Rank</th>
                                     <th class="text-left py-2 px-4 font-medium text-gray-900">Name</th>
                                     <th class="text-left py-2 px-4 font-medium text-gray-900">Score</th>
+                                    <th class="text-left py-2 px-4 font-medium text-gray-900">Lives</th>
                                     <th class="text-left py-2 px-4 font-medium text-gray-900">Department Manager</th>
                                 </tr>
                             </thead>
@@ -2652,6 +2653,8 @@
                 const avgLives = totalLives / userCount;
                 const maxScore = Math.max(...scores);
                 const zeroScoreCount = scores.filter(score => score === 0).length;
+                const zeroScoreEmployeesLives = data.filter(item => item.score === 0).reduce((sum, item) => sum + item.lives, 0);
+                const totalLivesExcludingZeroScores = totalLives - zeroScoreEmployeesLives;
                 const topUser = data.find(user => user.score === maxScore);
 
                 departmentStats.push({
@@ -2659,6 +2662,7 @@
                     name: departmentManagers[dataset],
                     totalScore,
                     totalLives,
+                    totalLivesExcludingZeroScores,
                     userCount,
                     avgScore,
                     avgLives,
@@ -2699,6 +2703,10 @@
                         <div class="flex justify-between">
                             <span class="text-sm text-gray-600">Total Lives:</span>
                             <span class="font-semibold">${dept.totalLives.toLocaleString()}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Lives (Excl. Zero):</span>
+                            <span class="font-semibold">${dept.totalLivesExcludingZeroScores.toLocaleString()}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-sm text-gray-600">Avg Lives:</span>
@@ -2908,6 +2916,7 @@
                     <td class="py-2 px-4">${displayRank}</td>
                     <td class="py-2 px-4 font-medium">${user.name}</td>
                     <td class="py-2 px-4">${user.score.toLocaleString()}</td>
+                    <td class="py-2 px-4">${user.lives}</td>
                     <td class="py-2 px-4">
                         <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
                             ${departmentManager}
