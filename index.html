@@ -328,7 +328,7 @@
             <div class="stats-grid mb-8">
                 <div class="stat-card">
                     <div class="stat-value" id="totalUsers">-</div>
-                    <div class="stat-label">Total Users</div>
+                    <div class="stat-label">Total Employees</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="totalLives">-</div>
@@ -363,7 +363,7 @@
                         <span id="performersIcon" class="mr-3"></span>
                         <span>Top Performers</span>
                     </h2>
-                    <p class="card-description">Users with the highest scores in the selected department</p>
+                    <p class="card-description">Employees with the highest scores in the selected department</p>
                 </div>
                 <div class="card-content">
                     <div class="flex justify-end mb-2">
@@ -399,7 +399,7 @@
                         <span id="histogramIcon" class="mr-3"></span>
                         <span id="chartTitle">Score Distribution (Power Law Analysis)</span>
                     </h2>
-                    <p id="chartDescription" class="card-description">Users ranked by score (highest to lowest) to
+                    <p id="chartDescription" class="card-description">Employees ranked by score (highest to lowest) to
                         visualize
                         power law distribution</p>
                     <div class="mt-4 flex gap-4">
@@ -2651,6 +2651,7 @@
                 const avgScore = totalScore / userCount;
                 const avgLives = totalLives / userCount;
                 const maxScore = Math.max(...scores);
+                const zeroScoreCount = scores.filter(score => score === 0).length;
                 const topUser = data.find(user => user.score === maxScore);
 
                 departmentStats.push({
@@ -2662,6 +2663,7 @@
                     avgScore,
                     avgLives,
                     maxScore,
+                    zeroScoreCount,
                     topUser: topUser.name,
                     icon: managerIcons[dataset]
                 });
@@ -2699,20 +2701,25 @@
                             <span class="font-semibold">${dept.totalLives.toLocaleString()}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-sm text-gray-600">Users:</span>
-                            <span class="font-semibold">${dept.userCount}</span>
+                            <span class="text-sm text-gray-600">Avg Lives:</span>
+                            <span class="font-semibold">${dept.avgLives.toFixed(1)}</span>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Max Score:</span>
+                            <span class="font-semibold">${dept.maxScore.toLocaleString()}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-sm text-gray-600">Avg Score:</span>
                             <span class="font-semibold">${dept.avgScore.toFixed(1)}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-sm text-gray-600">Avg Lives:</span>
-                            <span class="font-semibold">${dept.avgLives.toFixed(1)}</span>
+                            <span class="text-sm text-gray-600">Zero Scores:</span>
+                            <span class="font-semibold">${dept.zeroScoreCount}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-sm text-gray-600">Max Score:</span>
-                            <span class="font-semibold">${dept.maxScore.toLocaleString()}</span>
+                            <span class="text-sm text-gray-600">Employees:</span>
+                            <span class="font-semibold">${dept.userCount}</span>
                         </div>
                     </div>
                 `;
@@ -2721,7 +2728,7 @@
             });
         }
 
-        // Create rank distribution data (users ranked by score)
+        // Create rank distribution data (employees ranked by score)
         function createPowerLawData(data) {
             // Sort users by score in descending order
             const sortedData = [...data].sort((a, b) => b.score - a.score);
@@ -2950,10 +2957,10 @@
 
             if (chartType === 'powerlaw') {
                 chartTitle.textContent = 'Score Distribution (Rank Distribution)';
-                chartDescription.textContent = 'Users ranked by score (highest to lowest) to visualize score concentration';
+                chartDescription.textContent = 'Employees ranked by score (highest to lowest) to visualize score concentration';
             } else {
                 chartTitle.textContent = 'Score Distribution Histogram';
-                chartDescription.textContent = 'Distribution of user scores across the selected department(s)';
+                chartDescription.textContent = 'Distribution of employee scores across the selected department(s)';
             }
 
             // Update statistics
