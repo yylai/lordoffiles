@@ -3,55 +3,55 @@
         "rank": "1",
         "name": "jivedoodle",
         "lives": "7",
-        "score": "581"
+        "score": "669"
     },
     {
         "rank": "2",
-        "name": "0nelinewonder",
+        "name": "james_polhill",
         "lives": "5",
-        "score": "572"
+        "score": "641"
     },
     {
         "rank": "3",
-        "name": "james_polhill",
-        "lives": "6",
-        "score": "560"
+        "name": "bitrise25",
+        "lives": "9",
+        "score": "614"
     },
     {
         "rank": "4",
-        "name": "kayshhhmo",
-        "lives": "5",
-        "score": "534"
+        "name": "soybienmamon",
+        "lives": "6",
+        "score": "607"
     },
     {
         "rank": "5",
-        "name": "soybienmamon",
-        "lives": "6",
-        "score": "533"
+        "name": "0nelinewonder",
+        "lives": "5",
+        "score": "581"
     },
     {
         "rank": "6",
         "name": "0xbjartek",
-        "lives": "6",
-        "score": "522"
+        "lives": "5",
+        "score": "559"
     },
     {
         "rank": "7",
-        "name": "bitrise25",
-        "lives": "9",
-        "score": "518"
+        "name": "kayshhhmo",
+        "lives": "5",
+        "score": "543"
     },
     {
         "rank": "8",
-        "name": "streetervilled1",
-        "lives": "5",
-        "score": "518"
+        "name": "tasty_snackz",
+        "lives": "2",
+        "score": "519"
     },
     {
         "rank": "9",
-        "name": "tasty_snackz",
-        "lives": "2",
-        "score": "501"
+        "name": "streetervilled1",
+        "lives": "5",
+        "score": "518"
     },
     {
         "rank": "10",
@@ -62,14 +62,14 @@
     {
         "rank": "11",
         "name": "doubtmeharder",
-        "lives": "2",
+        "lives": "1",
         "score": "429"
     },
     {
         "rank": "12",
         "name": "skeens_jeremy",
         "lives": "6",
-        "score": "411"
+        "score": "413"
     },
     {
         "rank": "13",
@@ -85,20 +85,20 @@
     },
     {
         "rank": "15",
+        "name": "km404atl",
+        "lives": "5",
+        "score": "381"
+    },
+    {
+        "rank": "16",
         "name": "doodcollects",
         "lives": "4",
         "score": "379"
     },
     {
-        "rank": "16",
-        "name": "km404atl",
-        "lives": "6",
-        "score": "362"
-    },
-    {
         "rank": "17",
         "name": "montiweb3",
-        "lives": "6",
+        "lives": "5",
         "score": "350"
     },
     {
@@ -110,31 +110,31 @@
     {
         "rank": "19",
         "name": "thenftshack",
-        "lives": "3",
+        "lives": "1",
         "score": "227"
     },
     {
         "rank": "20",
         "name": "bigdaddyerac",
         "lives": "1",
-        "score": "194"
+        "score": "208"
     },
     {
         "rank": "21",
+        "name": "hazy_purps",
+        "lives": "8",
+        "score": "199"
+    },
+    {
+        "rank": "22",
         "name": "tonoboon",
         "lives": "1",
         "score": "189"
     },
     {
-        "rank": "22",
-        "name": "hazy_purps",
-        "lives": "8",
-        "score": "188"
-    },
-    {
         "rank": "23",
         "name": "ericdzengeleski",
-        "lives": "6",
+        "lives": "5",
         "score": "181"
     },
     {
@@ -147,7 +147,7 @@
         "rank": "25",
         "name": "spacecowboy2300",
         "lives": "3",
-        "score": "159"
+        "score": "169"
     },
     {
         "rank": "26",
@@ -170,7 +170,7 @@
     {
         "rank": "29",
         "name": "ohtobisan",
-        "lives": "8",
+        "lives": "7",
         "score": "131"
     },
     {
@@ -224,7 +224,7 @@
     {
         "rank": "38",
         "name": "chouyenchun1",
-        "lives": "3",
+        "lives": "1",
         "score": "20"
     },
     {
@@ -236,7 +236,7 @@
     {
         "rank": "40",
         "name": "0xfbm",
-        "lives": "2",
+        "lives": "1",
         "score": "4"
     }
 ]
